@@ -39,7 +39,7 @@ const timeline = [
 
 export default function About() {
   return (
-    <section id="about" className="w-full border-b border-[#1a1a18] px-16 py-16">
+    <section id="about" className="w-full border-b border-[#1a1a18] px-5 py-10 md:px-10 md:py-12 lg:px-16 lg:py-16">
       <div>
         {/* Section label */}
         <motion.div
@@ -47,7 +47,7 @@ export default function About() {
           whileInView="visible"
           viewport={{ once: true, margin: "-80px" }}
           variants={stagger}
-          className="mb-16"
+          className="mb-8 lg:mb-16"
         >
           <motion.p
             variants={fadeUp}
@@ -63,19 +63,19 @@ export default function About() {
           </motion.h2>
         </motion.div>
 
-        <div className="grid gap-12 lg:grid-cols-[200px_1fr] lg:gap-16">
+        <div className="grid gap-6 md:grid-cols-[160px_1fr] md:gap-6 lg:grid-cols-[200px_1fr] lg:gap-9">
           {/* Left: Avatar + Open to Work */}
           <motion.div
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: "-80px" }}
             variants={stagger}
-            className="flex flex-col gap-4"
+            className="flex flex-col items-center gap-4 md:items-start"
           >
             {/* Avatar placeholder */}
             <motion.div
               variants={fadeUp}
-              className="relative h-[200px] w-[200px] overflow-hidden rounded-2xl border border-void-edge bg-void-raised lg:h-[200px] lg:w-[200px]"
+              className="relative h-[120px] w-[120px] overflow-hidden rounded-2xl border border-void-edge bg-void-raised md:h-[160px] md:w-[160px] lg:h-[200px] lg:w-[200px]"
             >
               <div className="flex h-full w-full items-center justify-center">
                 <span className="font-geist text-5xl font-bold text-ink-5">

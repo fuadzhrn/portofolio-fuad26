@@ -63,7 +63,7 @@ export default function Contact() {
   };
 
   return (
-    <section id="contact" className="w-full border-b border-[#1a1a18] px-16 py-16">
+    <section id="contact" className="w-full border-b border-[#1a1a18] px-5 py-10 md:px-10 md:py-12 lg:px-16 lg:py-16">
       <div>
         {/* Heading */}
         <motion.div
@@ -93,7 +93,7 @@ export default function Contact() {
           </motion.p>
         </motion.div>
 
-        <div className="grid gap-10 lg:grid-cols-[1fr_320px] lg:gap-14">
+        <div className="grid gap-8 md:grid-cols-2 md:gap-10 lg:grid-cols-[1fr_320px] lg:gap-14">
           {/* Form */}
           <motion.form
             initial="hidden"
@@ -101,7 +101,7 @@ export default function Contact() {
             viewport={{ once: true, margin: "-60px" }}
             variants={stagger}
             onSubmit={handleSubmit}
-            className="flex flex-col gap-4"
+            className="order-2 flex flex-col gap-4 md:order-1"
           >
             <motion.div variants={fadeUp} className="grid gap-4 sm:grid-cols-2">
               <div className="flex flex-col gap-1.5">
@@ -168,7 +168,7 @@ export default function Contact() {
             whileInView="visible"
             viewport={{ once: true, margin: "-60px" }}
             variants={stagger}
-            className="flex flex-col gap-3"
+            className="order-1 flex flex-col gap-3 md:order-2"
           >
             <motion.p
               variants={fadeUp}

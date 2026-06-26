@@ -66,7 +66,7 @@ function Stars({ rating }: { rating: number }) {
 
 export default function Testimonial() {
   return (
-    <section className="w-full border-b border-[#1a1a18] px-16 py-16">
+    <section className="w-full border-b border-[#1a1a18] px-5 py-10 md:px-10 md:py-12 lg:px-16 lg:py-16">
       <div>
         {/* Heading */}
         <motion.div
@@ -96,7 +96,7 @@ export default function Testimonial() {
           whileInView="visible"
           viewport={{ once: true, margin: "-60px" }}
           variants={stagger}
-          className="grid gap-4 sm:grid-cols-2"
+          className="grid gap-4 md:grid-cols-2"
         >
           {/* Testimonial cards */}
           {testimonials.map((t) => (
@@ -139,7 +139,7 @@ export default function Testimonial() {
           {/* Empty "next" slot */}
           <motion.div
             variants={fadeUp}
-            className="flex flex-col items-center justify-center gap-3 rounded-xl border border-dashed border-void-edge bg-void-base p-8 text-center sm:col-span-1"
+            className="hidden md:flex flex-col items-center justify-center gap-3 rounded-xl border border-dashed border-void-edge bg-void-base p-8 text-center"
           >
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-void-card text-ink-5">
               <IconSparkles size={20} strokeWidth={1.5} />

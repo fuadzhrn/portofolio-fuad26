@@ -137,7 +137,7 @@ export default function ProjectsPage() {
     active === "all" ? projects : projects.filter((p) => p.category === active);
 
   return (
-    <div className="w-full px-16 py-16">
+    <div className="w-full px-5 py-10 md:px-10 md:py-12 lg:px-16 lg:py-16">
       <div>
         {/* Header */}
         <div className="mb-10">
@@ -153,7 +153,7 @@ export default function ProjectsPage() {
         </div>
 
         {/* Filter tabs */}
-        <div className="mb-8 flex flex-wrap gap-2">
+        <div className="mb-8 flex gap-2 overflow-x-auto pb-1 md:flex-wrap">
           {tabs.map((tab) => (
             <button
               key={tab.id}
@@ -177,7 +177,7 @@ export default function ProjectsPage() {
         {/* Grid */}
         <motion.div
           layout
-          className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
+          className="grid gap-4 md:grid-cols-2 lg:grid-cols-3"
         >
           <AnimatePresence mode="popLayout">
             {filtered.map((project) => (

@@ -110,7 +110,7 @@ type Props = { projects: Project[] };
 
 export default function ProjectsTeaser({ projects }: Props) {
   return (
-    <section className="w-full border-b border-[#1a1a18] px-16 py-16">
+    <section className="w-full border-b border-[#1a1a18] px-5 py-10 md:px-10 md:py-12 lg:px-16 lg:py-16">
       <div>
         {/* Heading */}
         <motion.div
@@ -151,10 +151,12 @@ export default function ProjectsTeaser({ projects }: Props) {
           whileInView="visible"
           viewport={{ once: true, margin: "-60px" }}
           variants={stagger}
-          className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3"
+          className="grid gap-5 md:grid-cols-2"
         >
-          {projects.map((project) => (
-            <ProjectCard key={project.slug} project={project} />
+          {projects.map((project, i) => (
+            <div key={project.slug} className={i === 0 ? "md:col-span-2" : ""}>
+              <ProjectCard project={project} />
+            </div>
           ))}
         </motion.div>
 

@@ -15,13 +15,13 @@ const stats = [
 
 export default function Hero() {
   return (
-    <section className="flex min-h-screen w-full items-center border-b border-[#1a1a18] px-16 pb-16 pt-20">
-      <div className="w-full">
+    <section className="w-full border-b border-[#1a1a18] px-5 py-10 md:px-10 md:py-12 lg:px-16 lg:py-16">
+      <div>
         <motion.div
           variants={heroContainer}
           initial="hidden"
           animate="visible"
-          className="flex flex-col gap-7"
+          className="flex flex-col gap-6 md:gap-7"
         >
           {/* Available badge */}
           <motion.div variants={fadeUp}>
@@ -39,10 +39,8 @@ export default function Hero() {
             <p className="font-jakarta text-base font-medium text-ink-4">
               Hi, I&apos;m
             </p>
-            <h1 className="font-geist text-5xl font-bold leading-[1.1] tracking-tight text-ink md:text-6xl">
-              Muh Fuad Zahran
-              <br />
-              <span className="text-ink-2">Firman</span>
+            <h1 className="font-geist text-4xl font-semibold leading-[1.1] tracking-tight text-ink md:text-5xl md:font-bold lg:text-6xl">
+              Muh Fuad Zahran Firman
             </h1>
           </motion.div>
 
@@ -61,7 +59,7 @@ export default function Hero() {
           {/* Description */}
           <motion.p
             variants={fadeUp}
-            className="max-w-lg font-jakarta text-base leading-relaxed text-ink-3"
+            className="max-w-2xl font-jakarta text-[13px] leading-relaxed text-ink-3 md:text-base"
           >
             Saya membangun website dan aplikasi web yang cepat, modern, dan
             berdampak — mulai dari desain hingga deployment. Berbasis di
@@ -69,40 +67,45 @@ export default function Hero() {
           </motion.p>
 
           {/* CTA buttons */}
-          <motion.div variants={fadeUp} className="flex flex-wrap items-center gap-3">
+          <motion.div variants={fadeUp} className="flex flex-col gap-3 md:flex-row md:flex-wrap md:items-center">
             <Link
               href="/projects"
-              className="inline-flex items-center gap-2 rounded-xl bg-ink px-5 py-2.5 font-jakarta text-sm font-semibold text-void-base transition-opacity duration-150 hover:opacity-85"
+              className="flex w-full items-center justify-center gap-2 rounded-xl bg-ink px-5 py-2.5 font-jakarta text-sm font-semibold text-void-base transition-opacity duration-150 hover:opacity-85 md:inline-flex md:w-auto"
             >
               Lihat Proyek
               <IconArrowRight size={15} strokeWidth={2.5} />
             </Link>
             <Link
               href="/#contact"
-              className="inline-flex items-center gap-2 rounded-xl border border-void-edge px-5 py-2.5 font-jakarta text-sm font-semibold text-ink-2 transition-colors duration-150 hover:bg-void-raised hover:text-ink"
+              className="flex w-full items-center justify-center gap-2 rounded-xl border border-void-edge px-5 py-2.5 font-jakarta text-sm font-semibold text-ink-2 transition-colors duration-150 hover:bg-void-raised hover:text-ink md:inline-flex md:w-auto"
             >
               <IconMessage size={15} strokeWidth={1.75} />
               Hubungi Saya
             </Link>
           </motion.div>
 
-          {/* Stats */}
-          <motion.div
-            variants={fadeUp}
-            className="mt-2 flex flex-wrap items-center gap-0"
-          >
+          {/* Stats — mobile: 2×2 grid */}
+          <motion.div variants={fadeUp} className="mt-1 grid grid-cols-2 gap-4 md:hidden">
+            {stats.map((stat) => (
+              <div key={stat.label} className="flex flex-col gap-0.5">
+                <span className="font-geist text-xl font-bold leading-none text-ink">
+                  {stat.value}
+                </span>
+                <span className="font-jakarta text-xs text-ink-4">{stat.label}</span>
+              </div>
+            ))}
+          </motion.div>
+
+          {/* Stats — tablet/desktop: flex row with dividers */}
+          <motion.div variants={fadeUp} className="mt-1 hidden items-center md:flex">
             {stats.map((stat, i) => (
               <Fragment key={stat.label}>
-                {i > 0 && (
-                  <div className="mx-6 h-7 w-px bg-void-edge" />
-                )}
+                {i > 0 && <div className="mx-5 h-7 w-px bg-void-edge lg:mx-6" />}
                 <div className="flex flex-col gap-0.5">
                   <span className="font-geist text-2xl font-bold leading-none text-ink">
                     {stat.value}
                   </span>
-                  <span className="font-jakarta text-xs text-ink-4">
-                    {stat.label}
-                  </span>
+                  <span className="font-jakarta text-xs text-ink-4">{stat.label}</span>
                 </div>
               </Fragment>
             ))}

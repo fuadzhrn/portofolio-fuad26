@@ -34,7 +34,7 @@ const values = [
 
 export default function Value() {
   return (
-    <section className="w-full border-b border-[#1a1a18] px-16 py-16">
+    <section className="w-full border-b border-[#1a1a18] px-5 py-10 md:px-10 md:py-12 lg:px-16 lg:py-16">
       <div>
         {/* Heading */}
         <motion.div
@@ -64,7 +64,7 @@ export default function Value() {
           whileInView="visible"
           viewport={{ once: true, margin: "-80px" }}
           variants={stagger}
-          className="grid gap-4 sm:grid-cols-2"
+          className="grid gap-4 md:grid-cols-2"
         >
           {values.map((v) => {
             const Icon = v.icon;

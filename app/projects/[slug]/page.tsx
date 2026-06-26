@@ -59,7 +59,7 @@ export default async function ProjectDetailPage({
   return (
     <div className="w-full">
       {/* Back button */}
-      <div className="border-b border-void-edge px-16 py-4">
+      <div className="border-b border-void-edge px-5 py-4 md:px-10 lg:px-16">
         <Link
           href="/projects"
           className="inline-flex items-center gap-1.5 font-jakarta text-xs font-medium text-ink-4 transition-colors hover:text-ink"
@@ -76,10 +76,10 @@ export default async function ProjectDetailPage({
         </span>
       </div>
 
-      <div className="px-16 py-10">
-        <div className="grid gap-10 lg:grid-cols-[1fr_260px] lg:gap-14">
+      <div className="px-5 py-6 md:px-10 md:py-8 lg:px-16 lg:py-10">
+        <div className="grid gap-8 md:grid-cols-[1fr_220px] md:gap-10 lg:grid-cols-[1fr_280px] lg:gap-14">
           {/* ─── Left: Main content ─── */}
-          <div className="flex flex-col gap-10">
+          <div className="order-2 flex flex-col gap-10 md:order-1">
             {/* Title block */}
             <div className="flex flex-col gap-3">
               <div className="flex flex-wrap items-center gap-2">
@@ -187,7 +187,7 @@ export default async function ProjectDetailPage({
           </div>
 
           {/* ─── Right: Sticky info panel ─── */}
-          <aside className="flex flex-col gap-4 lg:sticky lg:top-6 lg:self-start">
+          <aside className="order-1 flex flex-col gap-4 md:order-2 md:sticky md:top-6 md:self-start">
             <div className="rounded-xl border border-void-edge bg-void-card p-5">
               <p className="mb-4 font-jakarta text-xs font-medium uppercase tracking-[0.15em] text-ink-5">
                 Info Proyek
@@ -287,7 +287,7 @@ export default async function ProjectDetailPage({
 
       {/* ─── Prev / Next navigation ─── */}
       <div className="border-t border-void-edge">
-        <div className="grid grid-cols-2 px-16">
+        <div className="grid grid-cols-2 px-5 md:px-10 lg:px-16">
           {prevProject ? (
             <Link
               href={`/projects/${prevProject.slug}`}
