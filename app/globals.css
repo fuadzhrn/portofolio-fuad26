@@ -1,26 +1,40 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  /* ── Backgrounds (Void Neutral) ── */
+  --color-void-base: #111110;
+  --color-void-card: #161614;
+  --color-void-raised: #1a1a18;
+  --color-void-surface: #1e1e1c;
+
+  /* ── Borders ── */
+  --color-void-edge: #222220;
+  --color-void-edge-hi: #2a2a28;
+
+  /* ── Text scale ── */
+  --color-ink: #e8e8e4;
+  --color-ink-2: #c8c8c2;
+  --color-ink-3: #888884;
+  --color-ink-4: #555550;
+  --color-ink-5: #3a3a38;
+  --color-ink-6: #383836;
+
+  /* ── Accent ── */
+  --color-gold: #c9a96e;
+
+  /* ── Typography ── */
+  --font-geist: var(--font-geist-sans);
+  --font-jakarta: var(--font-jakarta-sans);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: #111110;
+  color: #e8e8e4;
+  font-family: var(--font-jakarta-sans), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
