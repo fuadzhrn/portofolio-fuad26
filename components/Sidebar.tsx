@@ -17,7 +17,7 @@ import {
 
 const NAV_ITEMS = [
   { href: "/", icon: IconHome, label: "Home" },
-  { href: "/#about", icon: IconUser, label: "About" },
+  { href: "/about", icon: IconUser, label: "About" },
   { href: "/#skills", icon: IconCode, label: "Skills" },
   { href: "/projects", icon: IconBriefcase, label: "Projects" },
   { href: "/#contact", icon: IconMail, label: "Contact" },

@@ -157,11 +157,11 @@ export default async function ProjectDetailPage({
                       key={i}
                       className="rounded-xl border border-void-edge bg-void-card p-4"
                     >
-                      <p className="mb-1.5 font-jakarta text-xs font-medium text-ink-4">
+                      <p className="mb-1.5 font-jakarta text-sm font-medium text-ink-4">
                         <span className="mr-1.5 text-ink-5">Masalah:</span>
                         {c.problem}
                       </p>
-                      <p className="font-jakarta text-xs text-ink-3">
+                      <p className="font-jakarta text-sm text-ink-3">
                         <span className="mr-1.5 font-medium text-ink-3">Solusi:</span>
                         {c.solution}
                       </p>
@@ -197,7 +197,7 @@ export default async function ProjectDetailPage({
                 <div className="flex items-center gap-2.5">
                   <IconCalendar size={14} strokeWidth={1.75} className="text-ink-5 shrink-0" />
                   <div>
-                    <p className="font-jakarta text-[10px] text-ink-5">Tahun</p>
+                    <p className="font-jakarta text-xs text-ink-5">Tahun</p>
                     <p className="font-jakarta text-sm font-medium text-ink-2">
                       {project.year}
                     </p>
@@ -206,7 +206,7 @@ export default async function ProjectDetailPage({
                 <div className="flex items-center gap-2.5">
                   <IconTag size={14} strokeWidth={1.75} className="text-ink-5 shrink-0" />
                   <div>
-                    <p className="font-jakarta text-[10px] text-ink-5">Kategori</p>
+                    <p className="font-jakarta text-xs text-ink-5">Kategori</p>
                     <p className="font-jakarta text-sm font-medium text-ink-2">
                       {categoryLabels[project.category]}
                     </p>
@@ -216,7 +216,7 @@ export default async function ProjectDetailPage({
                   <div className="flex items-center gap-2.5">
                     <IconTag size={14} strokeWidth={1.75} className="text-ink-5 shrink-0" />
                     <div>
-                      <p className="font-jakarta text-[10px] text-ink-5">Perusahaan</p>
+                      <p className="font-jakarta text-xs text-ink-5">Perusahaan</p>
                       <p className="font-jakarta text-sm font-medium text-ink-2">
                         {project.company}
                       </p>
