@@ -7,7 +7,7 @@ import Link from "next/link";
 import { fadeUp, stagger } from "@/lib/motion";
 import { IconArrowRight, IconExternalLink, IconBrandGithub } from "@tabler/icons-react";
 import type { Project } from "@/data/projects";
-import { categoryLabels } from "@/data/projects";
+import { categoryLabels, getThumbnail } from "@/data/projects";
 import { useT } from "@/components/LangProvider";
 import { ui } from "@/data/ui-strings";
 
@@ -24,7 +24,8 @@ function ProjectCard({ project, wide = false }: { project: Project; wide?: boole
   const t = useT();
   const [imgError, setImgError] = useState(false);
   const gradient = categoryGradients[project.category] ?? categoryGradients.websites;
-  const thumbnail = imgError ? undefined : project.images[0];
+  const thumb = getThumbnail(project);
+  const thumbnail = imgError ? undefined : thumb.src;
 
   return (
     <motion.article
@@ -33,7 +34,9 @@ function ProjectCard({ project, wide = false }: { project: Project; wide?: boole
     >
       {/* Thumbnail */}
       <div
-        className={`relative h-44 w-full bg-gradient-to-br ${gradient} flex items-center justify-center overflow-hidden`}
+        className={`relative w-full bg-gradient-to-br ${gradient} flex items-center justify-center overflow-hidden ${
+          wide ? "aspect-[16/7]" : "aspect-[16/10]"
+        }`}
       >
         {thumbnail ? (
           <>
@@ -46,11 +49,12 @@ function ProjectCard({ project, wide = false }: { project: Project; wide?: boole
                   ? "(min-width: 1024px) calc(100vw - 220px), (min-width: 768px) calc(100vw - 72px), 100vw"
                   : "(min-width: 1024px) calc((100vw - 220px) / 2), (min-width: 768px) calc((100vw - 72px) / 2), 100vw"
               }
-              className="object-cover object-top"
+              className="object-cover"
+              style={{ objectPosition: thumb.position }}
               onError={() => setImgError(true)}
             />
-            {/* thin dark overlay (#111110) so the category badge stays readable */}
-            <div className="absolute inset-0 bg-gradient-to-b from-void-base/60 via-void-base/10 to-transparent" />
+            {/* thin gradient into the card colour (#161614): no hard edge above the text */}
+            <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-void-card to-transparent" />
           </>
         ) : (
           /* decorative corner initials */
@@ -60,7 +64,7 @@ function ProjectCard({ project, wide = false }: { project: Project; wide?: boole
         )}
         {/* Category badge */}
         <div className="absolute left-3 top-3">
-          <span className="rounded-md border border-void-edge-hi bg-void-surface/80 px-2 py-0.5 font-jakarta text-[10px] font-medium text-ink-3 backdrop-blur-sm">
+          <span className="rounded-md border border-void-edge-hi bg-void-base/80 px-2 py-0.5 font-jakarta text-[10px] font-medium text-ink-3 backdrop-blur-sm">
             {t(categoryLabels[project.category])}
           </span>
         </div>

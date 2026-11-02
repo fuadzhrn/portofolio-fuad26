@@ -13,6 +13,7 @@ import {
   projects,
   categoryLabels,
   inCategory,
+  getThumbnail,
   type Project,
   type ProjectCategory,
 } from "@/data/projects";
@@ -82,15 +83,16 @@ function ProjectThumbnail({
   const t = useT();
   const [imgError, setImgError] = useState(false);
   const Icon = CATEGORY_ICONS[project.category];
-  const thumbnail = project.images[0];
+  const thumb = getThumbnail(project);
+  const thumbnail = thumb.src;
   const showIcon = imgError || !thumbnail;
 
   return (
     <div
       className={`relative flex shrink-0 items-center justify-center overflow-hidden bg-[#1A1A18] ${
         featured
-          ? "h-40 w-full border-b-[0.5px] border-[#1E1E1C] md:h-auto md:w-[200px] md:border-b-0 md:border-r-[0.5px] md:border-r-[#1E1E1C]"
-          : "h-[120px] w-full border-b-[0.5px] border-[#1E1E1C]"
+          ? "aspect-[16/7] w-full border-b-[0.5px] border-[#1E1E1C]"
+          : "aspect-[16/10] w-full border-b-[0.5px] border-[#1E1E1C]"
       }`}
     >
       {showIcon ? (
@@ -102,12 +104,17 @@ function ProjectThumbnail({
           fill
           sizes={
             featured
-              ? "(min-width: 768px) 200px, 100vw"
+              ? "(min-width: 1024px) 66vw, 100vw"
               : "(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
           }
-          className="object-cover object-top"
+          className="object-cover"
+          style={{ objectPosition: thumb.position }}
           onError={() => setImgError(true)}
         />
+      )}
+      {!showIcon && (
+        // thin gradient into the card colour (#161614): no hard edge above the text
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-[#161614] to-transparent" />
       )}
     </div>
   );
@@ -150,10 +157,8 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
         cursor: "pointer",
       }}
     >
-      {/* Inner layout: column (all) → row on md only for featured */}
-      <div
-        className={`flex h-full ${project.featured ? "flex-col md:flex-row" : "flex-col"}`}
-      >
+      {/* Inner layout: image on top for every card (featured image is 16/7) */}
+      <div className="flex h-full flex-col">
         {/* Thumbnail */}
         <ProjectThumbnail project={project} featured={project.featured} />
 

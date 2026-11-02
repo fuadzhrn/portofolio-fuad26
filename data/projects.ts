@@ -21,8 +21,11 @@ export type Project = {
   description: Localized;
   tech: string[];
   featured: boolean;
-  // /images/projects/<slug>/<name>.webp — first image is the card thumbnail.
+  // /images/projects/<slug>/<name>.webp — first image is the default card thumbnail.
   images: string[];
+  // Card thumbnail (default images[0]) and its CSS object-position (default "center top").
+  thumbnail?: string;
+  thumbPosition?: string;
   poster?: string;
   demoVideo?: string;
   year?: string;
@@ -81,6 +84,8 @@ export const projects: Project[] = [
       "/images/projects/luxandgo/desktop.webp",
       "/images/projects/luxandgo/mobile.webp",
     ],
+    thumbnail: "/images/projects/luxandgo/desktop.webp",
+    thumbPosition: "center bottom",
     tech: ["Laravel", "SQLite", "JavaScript"],
     liveUrl: "https://luxandgo.co.id",
     description: {
@@ -104,6 +109,7 @@ export const projects: Project[] = [
     role: freelanceRole,
     featured: false,
     images: ["/images/projects/kalya-rentcar/hero.webp"],
+    thumbPosition: "left top",
     tech: ["Laravel"],
     liveUrl: "https://kalyarentcar.com",
     description: {
@@ -127,6 +133,7 @@ export const projects: Project[] = [
     role: freelanceRole,
     featured: false,
     images: ["/images/projects/otobiz/hero.webp"],
+    thumbPosition: "left top",
     tech: ["Laravel"],
     liveUrl: "https://otobiz.co.id",
     description: {
@@ -150,6 +157,7 @@ export const projects: Project[] = [
     role: freelanceRole,
     featured: false,
     images: ["/images/projects/biotra/hero.webp"],
+    thumbPosition: "left top",
     tech: ["Laravel"],
     liveUrl: "https://biotra.id",
     description: {
@@ -173,6 +181,7 @@ export const projects: Project[] = [
     role: freelanceRole,
     featured: false,
     images: ["/images/projects/carasset/hero.webp"],
+    thumbPosition: "center top",
     tech: ["Laravel"],
     liveUrl: "https://carassetofficial.com",
     description: {
@@ -201,6 +210,7 @@ export const projects: Project[] = [
       "/images/projects/multi-branch-pos/checkout.webp",
       "/images/projects/multi-branch-pos/stock-transfer.webp",
     ],
+    thumbPosition: "left top",
     poster: "/images/projects/multi-branch-pos/pos-poster.jpg",
     demoVideo: "/videos/pos-checkout-demo.mp4",
     tech: ["Laravel 13", "PHP 8.3", "MySQL 8.4", "Blade", "Vanilla JS"],
@@ -281,6 +291,7 @@ export const projects: Project[] = [
     organization: "PLN UID Sulselrabar",
     featured: false,
     images: ["/images/projects/pln-internship-system/dashboard.webp"],
+    thumbPosition: "left top",
     tech: ["PHP", "JavaScript", "Bootstrap"],
     description: {
       en: "Internship administration system that digitized response-letter and certificate workflows. Still in use today.",
@@ -323,6 +334,7 @@ export const projects: Project[] = [
       "/images/projects/vale-baja-scholars/scholarship-select.webp",
       "/images/projects/vale-baja-scholars/applications.webp",
     ],
+    thumbPosition: "left top",
     tech: ["Laravel", "MySQL", "Bootstrap", "Python", "FastAPI", "YOLO", "OCR"],
     description: {
       en: "Scholarship system with an AI GPA check: YOLO finds the GPA on an uploaded transcript, OCR reads it, and rules decide eligibility.",
@@ -387,6 +399,7 @@ export const projects: Project[] = [
     },
     featured: false,
     images: ["/images/projects/activity-monitoring-cv/detection.webp"],
+    thumbPosition: "left top",
     tech: ["YOLOv8", "OpenCV", "Python", "DeepSORT"],
     description: {
       en: "Recognizes who is on camera, tracks them, and classifies their activity: Working, Mobile Phone Use, Sleeping or No Activity.",
@@ -508,6 +521,7 @@ export const projects: Project[] = [
       "/images/projects/powerbi-dashboard/dashboard.webp",
       "/images/projects/powerbi-dashboard/star-schema.webp",
     ],
+    thumbPosition: "left top",
     tech: ["Power BI", "DAX", "Power Query", "SQL", "Excel"],
     description: {
       en: "Power BI dashboard for monitoring interns, with 5 KPI cards and a 6-table star schema. Shown with synthetic data.",
@@ -552,6 +566,9 @@ export const projects: Project[] = [
       "/images/projects/figma-ui-design/kuliahku-register.webp",
       "/images/projects/figma-ui-design/kuliahku-dashboard.webp",
     ],
+    // Clean crop inside the phone frame (the exports have noisy margins).
+    thumbnail: "/images/projects/figma-ui-design/card-thumb.webp",
+    thumbPosition: "center top",
     tech: ["Figma"],
     description: {
       en: "Personal UI design practice in Figma (not client work): Langkasa (home, search results, checkout) and KuliahKu (register, dashboard).",
@@ -579,6 +596,7 @@ export const projects: Project[] = [
       "/images/projects/system-design-docs/activity-diagram.webp",
       "/images/projects/system-design-docs/activity-detail.webp",
     ],
+    thumbPosition: "center top",
     tech: ["Sitemap", "Activity diagram"],
     description: {
       en: "Sitemap of a multi-branch store system (12 modules, 3 roles) and an item-return activity diagram with 4 swimlanes.",
@@ -627,6 +645,11 @@ export const projects: Project[] = [
 
 export const getFeaturedProjects = (): Project[] =>
   projects.filter((p) => p.featured).slice(0, 3);
+
+export const getThumbnail = (project: Project): { src?: string; position: string } => ({
+  src: project.thumbnail ?? project.images[0],
+  position: project.thumbPosition ?? "center top",
+});
 
 export const getProjectBySlug = (slug: string): Project | undefined =>
   projects.find((p) => p.slug === slug);
