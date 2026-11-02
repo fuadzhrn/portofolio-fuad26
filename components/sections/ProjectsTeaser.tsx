@@ -6,17 +6,20 @@ import { fadeUp, stagger } from "@/lib/motion";
 import { IconArrowRight, IconExternalLink, IconBrandGithub } from "@tabler/icons-react";
 import type { Project } from "@/data/projects";
 import { categoryLabels } from "@/data/projects";
+import { t } from "@/lib/i18n";
+import { ui } from "@/data/ui-strings";
 
 // Gradient backgrounds per category (no real thumbnails yet)
 const categoryGradients: Record<string, string> = {
-  website: "from-[#1a1a18] via-[#1e1c14] to-[#222018]",
-  kuliah: "from-[#141820] via-[#161a1e] to-[#181c20]",
-  riset: "from-[#1a1814] via-[#1e1a10] to-[#201c10]",
-  magang: "from-[#181a1a] via-[#1a1c1c] to-[#1c1e1e]",
+  websites: "from-[#1a1a18] via-[#1e1c14] to-[#222018]",
+  systems: "from-[#181a1a] via-[#1a1c1c] to-[#1c1e1e]",
+  "ai-data": "from-[#141820] via-[#161a1e] to-[#181c20]",
+  "design-docs": "from-[#1a1a18] via-[#1e1c14] to-[#222018]",
+  research: "from-[#1a1814] via-[#1e1a10] to-[#201c10]",
 };
 
 function ProjectCard({ project }: { project: Project }) {
-  const gradient = categoryGradients[project.category] ?? categoryGradients.website;
+  const gradient = categoryGradients[project.category] ?? categoryGradients.websites;
 
   return (
     <motion.article
@@ -29,12 +32,12 @@ function ProjectCard({ project }: { project: Project }) {
       >
         {/* decorative corner initials */}
         <span className="font-geist text-5xl font-bold text-void-edge-hi select-none">
-          {project.title.charAt(0)}
+          {t(project.title).charAt(0)}
         </span>
         {/* Category badge */}
         <div className="absolute left-3 top-3">
           <span className="rounded-md border border-void-edge-hi bg-void-surface/80 px-2 py-0.5 font-jakarta text-[10px] font-medium text-ink-3 backdrop-blur-sm">
-            {categoryLabels[project.category]}
+            {t(categoryLabels[project.category])}
           </span>
         </div>
       </div>
@@ -43,13 +46,13 @@ function ProjectCard({ project }: { project: Project }) {
       <div className="flex flex-1 flex-col gap-3 p-5">
         <div className="flex flex-col gap-0.5">
           <h3 className="font-geist text-base font-semibold text-ink">
-            {project.title}
+            {t(project.title)}
           </h3>
-          <p className="font-jakarta text-xs text-ink-4">{project.subtitle}</p>
+          <p className="font-jakarta text-xs text-ink-4">{t(project.subtitle)}</p>
         </div>
 
         <p className="font-jakarta text-sm leading-relaxed text-ink-4 line-clamp-2">
-          {project.description}
+          {t(project.description)}
         </p>
 
         {/* Tech tags */}
@@ -75,7 +78,7 @@ function ProjectCard({ project }: { project: Project }) {
             href={`/projects/${project.slug}`}
             className="inline-flex items-center gap-1.5 font-jakarta text-xs font-medium text-ink-3 transition-colors hover:text-ink"
           >
-            Lihat Detail
+            {t(ui.viewDetails)}
             <IconArrowRight size={12} strokeWidth={2.5} />
           </Link>
           <div className="flex items-center gap-2">
@@ -125,13 +128,13 @@ export default function ProjectsTeaser({ projects }: Props) {
               variants={fadeUp}
               className="mb-2 font-jakarta text-xs font-medium uppercase tracking-[0.2em] text-ink-4"
             >
-              Karya Terbaik
+              {t(ui.featuredWork)}
             </motion.p>
             <motion.h2
               variants={fadeUp}
               className="font-geist text-3xl font-bold tracking-tight text-ink lg:text-4xl"
             >
-              Proyek pilihan
+              {t(ui.selectedProjects)}
             </motion.h2>
           </div>
           <motion.div variants={fadeUp}>
@@ -139,7 +142,7 @@ export default function ProjectsTeaser({ projects }: Props) {
               href="/projects"
               className="hidden items-center gap-1.5 font-jakarta text-sm font-medium text-ink-3 transition-colors hover:text-ink sm:inline-flex"
             >
-              Semua Proyek
+              {t(ui.allProjects)}
               <IconArrowRight size={14} strokeWidth={2} />
             </Link>
           </motion.div>
@@ -172,7 +175,7 @@ export default function ProjectsTeaser({ projects }: Props) {
             href="/projects"
             className="inline-flex items-center gap-2 rounded-xl border border-void-edge px-5 py-2.5 font-jakarta text-sm font-medium text-ink-2 transition-colors hover:bg-void-raised hover:text-ink"
           >
-            Lihat Semua Proyek
+            {t(ui.viewAllProjects)}
             <IconArrowRight size={14} strokeWidth={2} />
           </Link>
         </motion.div>

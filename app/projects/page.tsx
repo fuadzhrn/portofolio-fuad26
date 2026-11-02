@@ -8,54 +8,62 @@ import {
   IconBuildingSkyscraper,
   IconCode,
   IconFileText,
-  IconBuilding,
+  IconBrain,
+  IconLayout,
   IconInbox,
   IconBrandGithub,
   IconExternalLink,
 } from "@tabler/icons-react";
 import {
   projects,
+  categoryLabels,
+  inCategory,
   type Project,
   type ProjectCategory,
 } from "@/data/projects";
+import { t, type Localized } from "@/lib/i18n";
+import { ui } from "@/data/ui-strings";
 
 // ─── Types ──────────────────────────────────────────────────────────────────────
 
-type FilterId = "semua" | ProjectCategory;
+type FilterId = "all" | ProjectCategory;
 
 // ─── Config ─────────────────────────────────────────────────────────────────────
 
-const TABS: { id: FilterId; label: string }[] = [
-  { id: "semua", label: "Semua" },
-  { id: "website", label: "Website" },
-  { id: "kuliah", label: "Projek Kuliah" },
-  { id: "riset", label: "Riset & Jurnal" },
-  { id: "magang", label: "Magang" },
+const TABS: { id: FilterId; label: Localized }[] = [
+  { id: "all", label: ui.filterAll },
+  { id: "websites", label: categoryLabels.websites },
+  { id: "systems", label: categoryLabels.systems },
+  { id: "ai-data", label: categoryLabels["ai-data"] },
+  { id: "design-docs", label: categoryLabels["design-docs"] },
+  { id: "research", label: categoryLabels.research },
 ];
 
 const CATEGORY_ICONS: Record<ProjectCategory, React.ElementType> = {
-  website: IconBuildingSkyscraper,
-  kuliah: IconCode,
-  riset: IconFileText,
-  magang: IconBuilding,
+  websites: IconBuildingSkyscraper,
+  systems: IconCode,
+  "ai-data": IconBrain,
+  "design-docs": IconLayout,
+  research: IconFileText,
 };
 
-const CATEGORY_LABELS: Record<ProjectCategory, string> = {
-  website: "Website",
-  kuliah: "Projek Kuliah",
-  riset: "Sinta 2",
-  magang: "Magang",
+const CATEGORY_LABELS: Record<ProjectCategory, Localized> = {
+  websites: { en: "Website", id: "Website" },
+  systems: { en: "System", id: "Sistem" },
+  "ai-data": { en: "AI & Data", id: "AI & Data" },
+  "design-docs": { en: "Design & Docs", id: "Desain & Dokumentasi" },
+  research: { en: "SINTA 2", id: "SINTA 2" },
 };
 
 function getCount(id: FilterId): number {
-  if (id === "semua") return projects.length;
-  return projects.filter((p) => p.category === id).length;
+  if (id === "all") return projects.length;
+  return projects.filter((p) => inCategory(p, id)).length;
 }
 
 // ─── CategoryBadge ──────────────────────────────────────────────────────────────
 
 function CategoryBadge({ category }: { category: ProjectCategory }) {
-  const isRiset = category === "riset";
+  const isRiset = category === "research";
   return (
     <span
       className={`inline-flex shrink-0 items-center rounded-full font-jakarta text-xs ${
@@ -67,7 +75,7 @@ function CategoryBadge({ category }: { category: ProjectCategory }) {
         border: `0.5px solid ${isRiset ? "rgba(201,169,110,0.22)" : "#2A2A28"}`,
       }}
     >
-      {CATEGORY_LABELS[category]}
+      {t(CATEGORY_LABELS[category])}
     </span>
   );
 }
@@ -83,7 +91,8 @@ function ProjectThumbnail({
 }) {
   const [imgError, setImgError] = useState(false);
   const Icon = CATEGORY_ICONS[project.category];
-  const showIcon = imgError || !project.thumbnail;
+  const thumbnail = project.images[0];
+  const showIcon = imgError || !thumbnail;
 
   return (
     <div
@@ -97,8 +106,8 @@ function ProjectThumbnail({
         <Icon size={28} strokeWidth={1.5} style={{ color: "#252523" }} />
       ) : (
         <Image
-          src={project.thumbnail}
-          alt={project.title}
+          src={thumbnail}
+          alt={t(project.title)}
           fill
           className="object-cover"
           onError={() => setImgError(true)}
@@ -158,17 +167,17 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
 
           {/* Title */}
           <h3 className="mb-1 mt-2 font-geist text-sm font-medium text-ink-3">
-            {project.title}
+            {t(project.title)}
           </h3>
 
           {/* Subtitle */}
           <p className="mb-1 font-jakarta text-xs leading-relaxed text-ink-4">
-            {project.subtitle}
+            {t(project.subtitle)}
           </p>
 
           {/* Description */}
           <p className="mb-3 line-clamp-2 font-jakarta text-xs leading-relaxed text-ink-5">
-            {project.description}
+            {t(project.description)}
           </p>
 
           {/* Tech tags */}
@@ -206,7 +215,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
                   className="flex items-center gap-1 font-jakarta text-xs text-ink-5 transition-colors duration-150 hover:text-ink-4"
                 >
                   <IconExternalLink size={11} strokeWidth={2} />
-                  Live
+                  {t(ui.live)}
                 </button>
               )}
               {project.githubUrl && (
@@ -215,7 +224,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
                   className="flex items-center gap-1 font-jakarta text-xs text-ink-5 transition-colors duration-150 hover:text-ink-4"
                 >
                   <IconBrandGithub size={11} strokeWidth={1.75} />
-                  GitHub
+                  {t(ui.github)}
                 </button>
               )}
               {project.doiUrl && (
@@ -223,19 +232,11 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
                   onClick={(e) => openExternal(e, project.doiUrl!)}
                   className="font-jakarta text-xs text-ink-5 transition-colors duration-150 hover:text-ink-4"
                 >
-                  Baca Jurnal ↗
+                  {t(ui.readJournal)} ↗
                 </button>
               )}
-              {project.certificateUrl && (
-                <button
-                  onClick={(e) => openExternal(e, project.certificateUrl!)}
-                  className="font-jakarta text-xs text-ink-5 transition-colors duration-150 hover:text-ink-4"
-                >
-                  Lihat Sertifikat
-                </button>
-              )}
-              {!project.liveUrl && !project.githubUrl && !project.doiUrl && !project.certificateUrl && (
-                <span className="font-jakarta text-xs text-ink-5">Detail →</span>
+              {!project.liveUrl && !project.githubUrl && !project.doiUrl && (
+                <span className="font-jakarta text-xs text-ink-5">{t(ui.details)} →</span>
               )}
             </div>
 
@@ -255,7 +256,7 @@ function EmptyState() {
     <div className="flex flex-col items-center justify-center gap-3 py-24">
       <IconInbox size={32} strokeWidth={1.5} style={{ color: "#2A2A28" }} />
       <p className="font-jakarta" style={{ fontSize: 13, color: "#333330" }}>
-        Tidak ada proyek di kategori ini.
+        {t(ui.emptyCategory)}
       </p>
     </div>
   );
@@ -264,12 +265,12 @@ function EmptyState() {
 // ─── Page ────────────────────────────────────────────────────────────────────────
 
 export default function ProjectsPage() {
-  const [active, setActive] = useState<FilterId>("semua");
+  const [active, setActive] = useState<FilterId>("all");
 
   const filtered =
-    active === "semua"
+    active === "all"
       ? projects
-      : projects.filter((p) => p.category === active);
+      : projects.filter((p) => inCategory(p, active));
 
   return (
     <div className="w-full">
@@ -287,20 +288,19 @@ export default function ProjectsPage() {
 
         {/* Eyebrow */}
         <p className="mb-2 font-jakarta text-xs font-medium uppercase tracking-[0.12em] text-ink-4">
-          Semua Karya
+          {t(ui.allWork)}
         </p>
 
         {/* Title */}
         <h1 className="mb-4 font-geist text-3xl font-bold tracking-tight text-ink lg:text-4xl">
-          Dari website hingga riset —
+          {t(ui.projectsHeadingLine1)}
           <br />
-          ini semua yang pernah saya bangun.
+          {t(ui.projectsHeadingLine2)}
         </h1>
 
         {/* Description */}
         <p className="font-jakarta text-base leading-relaxed text-ink-4 md:max-w-xl">
-          Kumpulan proyek website, karya akademik, riset, dan pengalaman profesional
-          yang mencerminkan perjalanan saya sebagai developer.
+          {t(ui.projectsIntro)}
         </p>
       </motion.div>
 
@@ -325,7 +325,7 @@ export default function ProjectsPage() {
                     cursor: "pointer",
                   }}
                 >
-                  {tab.label}
+                  {t(tab.label)}
                   <span
                     className="font-mono text-xs"
                     style={{
