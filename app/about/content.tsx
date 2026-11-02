@@ -12,7 +12,8 @@ import {
   IconRosette,
   IconFileText,
 } from "@tabler/icons-react";
-import { t } from "@/lib/i18n";
+import { useT } from "@/components/LangProvider";
+import type { Localized } from "@/lib/i18n";
 import { ui } from "@/data/ui-strings";
 import {
   profile,
@@ -149,10 +150,10 @@ const EDUCATION_ICONS: Record<EducationItem["kind"], React.ElementType> = {
 
 type CertCard = {
   Icon: React.ElementType;
-  name: string;
-  issuer: string;
-  year: string;
-  badge: string;
+  name: Localized | string;
+  issuer: Localized | string;
+  year: Localized | string;
+  badge: Localized | string;
   href?: string;
 };
 
@@ -162,17 +163,17 @@ const CERTS: CertCard[] = [
     Icon: IconRosette,
     name: c.name,
     issuer: c.issuer,
-    year: t(c.validity),
-    badge: t(c.badge),
+    year: c.validity,
+    badge: c.badge,
   })),
   ...publications.map((pub) => {
     const project = getProjectBySlug(pub.slug);
     return {
       Icon: IconFileText,
-      name: project?.paperTitle ?? (project ? t(project.title) : pub.slug),
-      issuer: t(pub.venue),
+      name: project?.paperTitle ?? project?.title ?? pub.slug,
+      issuer: pub.venue,
       year: pub.year,
-      badge: t(ui.sinta2),
+      badge: ui.sinta2,
       href: project?.doiUrl,
     };
   }),
@@ -205,6 +206,7 @@ function Section({
 // ─── Main Component ───────────────────────────────────────────────────────────
 
 export default function AboutContent() {
+  const t = useT();
   return (
     <div className="w-full">
 
@@ -467,16 +469,16 @@ export default function AboutContent() {
               </div>
 
               <h3 className="mb-1 font-geist text-sm font-medium text-ink-3">
-                {cert.name}
+                {t(cert.name)}
               </h3>
-              <p className="mb-1 font-jakarta text-xs text-ink-4">{cert.issuer}</p>
+              <p className="mb-1 font-jakarta text-xs text-ink-4">{t(cert.issuer)}</p>
               <p
                 className="font-mono text-xs text-ink-5"
                 style={{ marginBottom: 10 }}
               >
-                {cert.year}
+                {t(cert.year)}
               </p>
-              <GoldBadge label={cert.badge} />
+              <GoldBadge label={t(cert.badge)} />
             </>
             );
             return (

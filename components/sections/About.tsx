@@ -3,11 +3,12 @@
 import { motion } from "framer-motion";
 import { IconMapPin, IconBriefcase, IconMail } from "@tabler/icons-react";
 import { fadeUp, stagger } from "@/lib/motion";
-import { t } from "@/lib/i18n";
+import { useT } from "@/components/LangProvider";
 import { ui } from "@/data/ui-strings";
 import { profile, bio, timeline } from "@/data/profile";
 
 export default function About() {
+  const t = useT();
   return (
     <section id="about" className="w-full border-b border-[#1a1a18] px-5 py-10 md:px-10 md:py-12 lg:px-16 lg:py-16">
       <div>

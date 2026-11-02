@@ -3,7 +3,9 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import type { ContributionData, ContributionDay } from "@/lib/github";
-import { GITHUB_USERNAME } from "@/lib/github";
+import { profile } from "@/data/profile";
+import { ui, uiLists } from "@/data/ui-strings";
+import { useLang, useT } from "@/components/LangProvider";
 
 // Gold-tinted level palette matching Void Neutral design system
 const LEVEL_COLORS: Record<0 | 1 | 2 | 3 | 4, string> = {
@@ -14,13 +16,12 @@ const LEVEL_COLORS: Record<0 | 1 | 2 | 3 | 4, string> = {
   4: "#39d353",   // full
 };
 
-const MONTH_LABELS = ["Jan","Feb","Mar","Apr","Mei","Jun","Jul","Agt","Sep","Okt","Nov","Des"];
-const DAY_LABELS = ["Min","","Sel","","Kam","","Sab"];
-
 function Cell({ day, size = 11 }: { day: ContributionDay; size?: number }) {
   const [tooltip, setTooltip] = useState(false);
+  const lang = useLang();
+  const t = useT();
 
-  const formattedDate = new Date(day.date).toLocaleDateString("id-ID", {
+  const formattedDate = new Date(day.date).toLocaleDateString(uiLists.locale[lang][0], {
     weekday: "short",
     day: "numeric",
     month: "short",
@@ -46,7 +47,7 @@ function Cell({ day, size = 11 }: { day: ContributionDay; size?: number }) {
           <span className="text-ink-3">{formattedDate}</span>
           {" — "}
           <span className="text-ink">
-            {day.count} kontribusi
+            {day.count} {t(ui.contributions)}
           </span>
         </div>
       )}
@@ -57,23 +58,30 @@ function Cell({ day, size = 11 }: { day: ContributionDay; size?: number }) {
 type Props = { data: ContributionData | null };
 
 export default function GithubGraph({ data }: Props) {
+  const lang = useLang();
+  const t = useT();
+
+  // No token or the API failed: neutral empty state, never fake data.
   if (!data) {
     return (
       <div className="mt-10 rounded-xl border border-void-edge bg-void-card p-6">
         <p className="font-jakarta text-sm text-ink-4">
-          Tambahkan{" "}
-          <code className="rounded bg-void-surface px-1.5 py-0.5 font-mono text-xs text-ink-3">
-            GITHUB_TOKEN
-          </code>{" "}
-          ke{" "}
-          <code className="rounded bg-void-surface px-1.5 py-0.5 font-mono text-xs text-ink-3">
-            .env.local
-          </code>{" "}
-          untuk menampilkan GitHub contributions graph.
+          {t(ui.githubUnavailable)}{" "}
+          <a
+            href={profile.github.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-ink-3 transition-colors hover:text-ink-2"
+          >
+            {t(ui.viewOnGithub)} ↗
+          </a>
         </p>
       </div>
     );
   }
+
+  const MONTH_LABELS = uiLists.months[lang];
+  const DAY_LABELS = uiLists.weekdays[lang];
 
   // Derive month label positions from week data
   const monthPositions: { label: string; col: number }[] = [];
@@ -101,15 +109,15 @@ export default function GithubGraph({ data }: Props) {
     >
       <div className="mb-4 flex items-center justify-between">
         <p className="font-jakarta text-sm font-medium text-ink-2">
-          GitHub Contributions
+          {t(ui.githubContributions)}
         </p>
         <a
-          href={`https://github.com/${GITHUB_USERNAME}`}
+          href={profile.github.url}
           target="_blank"
           rel="noopener noreferrer"
           className="font-jakarta text-xs text-ink-4 transition-colors hover:text-ink-2"
         >
-          @{GITHUB_USERNAME}
+          @{profile.github.handle}
         </a>
       </div>
 
@@ -177,11 +185,14 @@ export default function GithubGraph({ data }: Props) {
       {/* Footer */}
       <div className="mt-4 flex items-center justify-between">
         <p className="font-jakarta text-xs text-ink-4">
-          <span className="text-ink-2">{data.totalContributions.toLocaleString()}</span> kontribusi dalam setahun terakhir
+          <span className="text-ink-2">
+            {data.totalContributions.toLocaleString(uiLists.locale[lang][0])}
+          </span>{" "}
+          {t(ui.contributionsLastYear)}
         </p>
         {/* Legend */}
         <div className="flex items-center gap-1.5">
-          <span className="font-jakarta text-[10px] text-ink-5">Kurang</span>
+          <span className="font-jakarta text-[10px] text-ink-5">{t(ui.less)}</span>
           {([0, 1, 2, 3, 4] as const).map((level) => (
             <div
               key={level}
@@ -193,7 +204,7 @@ export default function GithubGraph({ data }: Props) {
               }}
             />
           ))}
-          <span className="font-jakarta text-[10px] text-ink-5">Banyak</span>
+          <span className="font-jakarta text-[10px] text-ink-5">{t(ui.more)}</span>
         </div>
       </div>
     </motion.div>

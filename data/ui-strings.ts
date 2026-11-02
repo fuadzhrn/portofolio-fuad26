@@ -10,6 +10,7 @@ export const ui = {
 
   // ── /projects ───────────────────────────────────────────────────────────────
   filterAll: { en: "All", id: "Semua" },
+  projectsTag: { en: "02 — projects", id: "02 — proyek" },
   allWork: { en: "All Work", id: "Semua Karya" },
   projectsHeadingLine1: {
     en: "From websites to research —",
@@ -46,6 +47,20 @@ export const ui = {
   viewDoi: { en: "View DOI", id: "Lihat DOI" },
   previous: { en: "Previous", id: "Sebelumnya" },
   next: { en: "Next", id: "Berikutnya" },
+  backToProjects: { en: "Back to projects", id: "Kembali ke proyek" },
+  visitSite: { en: "Visit site", id: "Kunjungi situs" },
+  period: { en: "Period", id: "Periode" },
+  role: { en: "Role", id: "Peran" },
+  links: { en: "Links", id: "Tautan" },
+  metrics: { en: "Metrics", id: "Metrik" },
+  howItWorks: { en: "How It Works", id: "Cara Kerja" },
+  screenshots: { en: "Screenshots", id: "Tangkapan Layar" },
+  demoVideo: { en: "Demo Video", id: "Video Demo" },
+  screenshotAlt: { en: "screenshot", id: "tangkapan layar" },
+  openImage: { en: "Open image", id: "Buka gambar" },
+  closeImage: { en: "Close", id: "Tutup" },
+  previousImage: { en: "Previous image", id: "Gambar sebelumnya" },
+  nextImage: { en: "Next image", id: "Gambar berikutnya" },
 
   // ── Home: projects teaser ───────────────────────────────────────────────────
   featuredWork: { en: "Featured Work", id: "Karya Terbaik" },
@@ -131,4 +146,50 @@ export const ui = {
     en: "I'm open to freelance projects and full-time roles — in Makassar, Jakarta, Surabaya or remote.",
     id: "Saya terbuka untuk proyek freelance dan posisi full-time — di Makassar, Jakarta, Surabaya, atau remote.",
   },
+
+  // ── Sidebar ─────────────────────────────────────────────────────────────────
+  navHome: { en: "Home", id: "Beranda" },
+  navAbout: { en: "About", id: "Tentang" },
+  navSkills: { en: "Skills", id: "Keahlian" },
+  navProjects: { en: "Projects", id: "Proyek" },
+  navContact: { en: "Contact", id: "Kontak" },
+  menu: { en: "Menu", id: "Menu" },
+  sidebarRole: { en: "Web Developer", id: "Web Developer" },
+  sidebarOpenToWork: { en: "Open to work", id: "Terbuka untuk kerja" },
+  rightsReserved: { en: "All rights reserved.", id: "Hak cipta dilindungi." },
+
+  // ── Language toggle ─────────────────────────────────────────────────────────
+  language: { en: "Language", id: "Bahasa" },
+  switchToEnglish: { en: "Switch to English", id: "Ganti ke bahasa Inggris" },
+  switchToIndonesian: { en: "Switch to Indonesian", id: "Ganti ke bahasa Indonesia" },
+
+  // ── GitHub contributions ────────────────────────────────────────────────────
+  githubContributions: { en: "GitHub Contributions", id: "Kontribusi GitHub" },
+  contributions: { en: "contributions", id: "kontribusi" },
+  contributionsLastYear: {
+    en: "contributions in the last year",
+    id: "kontribusi dalam setahun terakhir",
+  },
+  githubUnavailable: {
+    en: "GitHub activity is unavailable right now.",
+    id: "Aktivitas GitHub sedang tidak tersedia.",
+  },
+  viewOnGithub: { en: "View profile on GitHub", id: "Lihat profil di GitHub" },
+  less: { en: "Less", id: "Kurang" },
+  more: { en: "More", id: "Banyak" },
 } satisfies Record<string, Localized>;
+
+// Label lists (same { en, id } idea, but arrays).
+export const uiLists = {
+  months: {
+    en: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+    id: ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agt", "Sep", "Okt", "Nov", "Des"],
+  },
+  // Sunday first, only every other row is labelled (as on GitHub).
+  weekdays: {
+    en: ["Sun", "", "Tue", "", "Thu", "", "Sat"],
+    id: ["Min", "", "Sel", "", "Kam", "", "Sab"],
+  },
+  // BCP 47 locale for dates and numbers.
+  locale: { en: ["en-US"], id: ["id-ID"] },
+} satisfies Record<string, { en: string[]; id: string[] }>;

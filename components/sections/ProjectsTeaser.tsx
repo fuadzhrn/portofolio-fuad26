@@ -1,15 +1,17 @@
 "use client";
 
+import { useState } from "react";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { fadeUp, stagger } from "@/lib/motion";
 import { IconArrowRight, IconExternalLink, IconBrandGithub } from "@tabler/icons-react";
 import type { Project } from "@/data/projects";
 import { categoryLabels } from "@/data/projects";
-import { t } from "@/lib/i18n";
+import { useT } from "@/components/LangProvider";
 import { ui } from "@/data/ui-strings";
 
-// Gradient backgrounds per category (no real thumbnails yet)
+// Gradient backgrounds per category (behind the thumbnail, or alone when there is none)
 const categoryGradients: Record<string, string> = {
   websites: "from-[#1a1a18] via-[#1e1c14] to-[#222018]",
   systems: "from-[#181a1a] via-[#1a1c1c] to-[#1c1e1e]",
@@ -18,8 +20,11 @@ const categoryGradients: Record<string, string> = {
   research: "from-[#1a1814] via-[#1e1a10] to-[#201c10]",
 };
 
-function ProjectCard({ project }: { project: Project }) {
+function ProjectCard({ project, wide = false }: { project: Project; wide?: boolean }) {
+  const t = useT();
+  const [imgError, setImgError] = useState(false);
   const gradient = categoryGradients[project.category] ?? categoryGradients.websites;
+  const thumbnail = imgError ? undefined : project.images[0];
 
   return (
     <motion.article
@@ -30,10 +35,29 @@ function ProjectCard({ project }: { project: Project }) {
       <div
         className={`relative h-44 w-full bg-gradient-to-br ${gradient} flex items-center justify-center overflow-hidden`}
       >
-        {/* decorative corner initials */}
-        <span className="font-geist text-5xl font-bold text-void-edge-hi select-none">
-          {t(project.title).charAt(0)}
-        </span>
+        {thumbnail ? (
+          <>
+            <Image
+              src={thumbnail}
+              alt={t(project.title)}
+              fill
+              sizes={
+                wide
+                  ? "(min-width: 1024px) calc(100vw - 220px), (min-width: 768px) calc(100vw - 72px), 100vw"
+                  : "(min-width: 1024px) calc((100vw - 220px) / 2), (min-width: 768px) calc((100vw - 72px) / 2), 100vw"
+              }
+              className="object-cover object-top"
+              onError={() => setImgError(true)}
+            />
+            {/* thin dark overlay (#111110) so the category badge stays readable */}
+            <div className="absolute inset-0 bg-gradient-to-b from-void-base/60 via-void-base/10 to-transparent" />
+          </>
+        ) : (
+          /* decorative corner initials */
+          <span className="font-geist text-5xl font-bold text-void-edge-hi select-none">
+            {t(project.title).charAt(0)}
+          </span>
+        )}
         {/* Category badge */}
         <div className="absolute left-3 top-3">
           <span className="rounded-md border border-void-edge-hi bg-void-surface/80 px-2 py-0.5 font-jakarta text-[10px] font-medium text-ink-3 backdrop-blur-sm">
@@ -112,6 +136,7 @@ function ProjectCard({ project }: { project: Project }) {
 type Props = { projects: Project[] };
 
 export default function ProjectsTeaser({ projects }: Props) {
+  const t = useT();
   return (
     <section className="w-full border-b border-[#1a1a18] px-5 py-10 md:px-10 md:py-12 lg:px-16 lg:py-16">
       <div>
@@ -158,7 +183,7 @@ export default function ProjectsTeaser({ projects }: Props) {
         >
           {projects.map((project, i) => (
             <div key={project.slug} className={i === 0 ? "md:col-span-2" : ""}>
-              <ProjectCard project={project} />
+              <ProjectCard project={project} wide={i === 0} />
             </div>
           ))}
         </motion.div>

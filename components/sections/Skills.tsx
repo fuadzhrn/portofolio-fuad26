@@ -13,7 +13,7 @@ import {
   SiFigma, SiGit, SiGithub, SiDocker,
 } from "react-icons/si";
 import { fadeUp, stagger } from "@/lib/motion";
-import { t } from "@/lib/i18n";
+import { useT } from "@/components/LangProvider";
 import { ui } from "@/data/ui-strings";
 import GithubGraph from "@/components/sections/GithubGraph";
 import type { ContributionData } from "@/lib/github";
@@ -95,6 +95,7 @@ function SkillCard({ skill }: { skill: Skill }) {
 type Props = { contributions: ContributionData | null };
 
 export default function Skills({ contributions }: Props) {
+  const t = useT();
   return (
     <section id="skills" className="w-full border-b border-[#1a1a18] px-5 py-10 md:px-10 md:py-12 lg:px-16 lg:py-16">
       <div>
@@ -110,7 +111,7 @@ export default function Skills({ contributions }: Props) {
             variants={fadeUp}
             className="mb-2 font-jakarta text-xs font-medium uppercase tracking-[0.2em] text-ink-4"
           >
-            Tech Stack
+            {t(ui.techStack)}
           </motion.p>
           <motion.h2
             variants={fadeUp}

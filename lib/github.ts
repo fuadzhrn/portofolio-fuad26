@@ -1,3 +1,5 @@
+import { profile } from "@/data/profile";
+
 // Fetch GitHub contribution calendar via GraphQL API.
 // Requires GITHUB_TOKEN in .env.local with read:user scope.
 // Returns null on missing token or API error — UI handles gracefully.
@@ -13,7 +15,8 @@ export type ContributionData = {
   weeks: ContributionDay[][];
 };
 
-export const GITHUB_USERNAME = "fuadzhrn";
+// Server-only: reads GITHUB_TOKEN. Client components must import types only.
+export const GITHUB_USERNAME = profile.github.handle;
 
 const GRAPHQL_ENDPOINT = "https://api.github.com/graphql";
 
@@ -64,6 +67,7 @@ export async function fetchContributions(): Promise<ContributionData | null> {
     if (!res.ok) return null;
 
     const json = await res.json();
+    if (json?.errors) return null;
     const calendar =
       json?.data?.user?.contributionsCollection?.contributionCalendar;
 

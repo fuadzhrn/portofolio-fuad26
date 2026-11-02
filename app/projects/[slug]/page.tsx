@@ -1,5 +1,7 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import {
   IconArrowLeft,
   IconArrowRight,
@@ -7,29 +9,67 @@ import {
   IconBrandGithub,
   IconFileText,
   IconCalendar,
-  IconTag,
+  IconUser,
+  IconBuilding,
 } from "@tabler/icons-react";
 import {
+  projects,
   getProjectBySlug,
   getAllSlugs,
   categoryLabels,
   inCategory,
+  type Project,
 } from "@/data/projects";
-import { t } from "@/lib/i18n";
+import { t as translate, type Lang, type Localized } from "@/lib/i18n";
+import { getLang } from "@/lib/i18n.server";
 import { ui } from "@/data/ui-strings";
+import { CATEGORY_ICONS } from "@/components/projects/category-icons";
+import ProjectGallery from "@/components/projects/ProjectGallery";
+
+type Props = { params: Promise<{ slug: string }> };
 
 export function generateStaticParams() {
   return getAllSlugs().map((slug) => ({ slug }));
 }
 
-// Gradient per category
-const categoryGradients: Record<string, string> = {
-  websites: "from-[#1a1a18] to-[#201e14]",
-  systems: "from-[#181a1a] to-[#1c2020]",
-  "ai-data": "from-[#141820] to-[#181c22]",
-  "design-docs": "from-[#1a1a18] to-[#201e14]",
-  research: "from-[#1a1814] to-[#201c10]",
-};
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = await params;
+  const project = getProjectBySlug(slug);
+  if (!project) notFound();
+
+  const title = translate(project.title);
+  const description = translate(project.description);
+  const image = project.images[0];
+
+  // Relative image URL is resolved by metadataBase in app/layout.tsx.
+  return {
+    title,
+    description,
+    alternates: { canonical: `/projects/${project.slug}` },
+    openGraph: { title, description, images: image ? [image] : undefined },
+  };
+}
+
+// ─── Styles (same as the Hero buttons and existing chips/badges) ─────────────
+
+const primaryButton =
+  "inline-flex items-center justify-center gap-2 rounded-xl bg-ink px-5 py-2.5 font-jakarta text-sm font-semibold text-void-base transition-opacity duration-150 hover:opacity-85";
+const ghostButton =
+  "inline-flex items-center justify-center gap-2 rounded-xl border border-void-edge px-5 py-2.5 font-jakarta text-sm font-semibold text-ink-2 transition-colors duration-150 hover:bg-void-raised hover:text-ink";
+const badge =
+  "rounded-md border border-void-edge-hi bg-void-surface px-2.5 py-1 font-jakarta text-xs font-medium text-ink-3";
+const sectionTitle = "font-geist text-base font-semibold text-ink";
+
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+
+// Period from data; adds the year only when the period has none (e.g. "Academic project").
+function periodText(project: Project, lang: Lang): string | null {
+  const t = (field: Localized | string) => translate(field, lang);
+  const period = project.period ? t(project.period) : null;
+  if (!period) return project.year ?? null;
+  if (!project.year || /\d{4}/.test(period)) return period;
+  return `${period} · ${project.year}`;
+}
 
 function StatCard({ label, value }: { label: string; value: string }) {
   return (
@@ -40,25 +80,96 @@ function StatCard({ label, value }: { label: string; value: string }) {
   );
 }
 
-export default async function ProjectDetailPage({
-  params,
+function InfoRow({
+  icon: Icon,
+  label,
+  value,
 }: {
-  params: Promise<{ slug: string }>;
+  icon: React.ElementType;
+  label: string;
+  value: string;
 }) {
+  return (
+    <div className="flex items-start gap-2.5">
+      <Icon size={14} strokeWidth={1.75} className="mt-0.5 shrink-0 text-ink-5" />
+      <div>
+        <p className="font-jakarta text-xs text-ink-5">{label}</p>
+        <p className="font-jakarta text-sm font-medium text-ink-2">{value}</p>
+      </div>
+    </div>
+  );
+}
+
+function ProjectLinks({
+  project,
+  lang,
+  block = false,
+}: {
+  project: Project;
+  lang: Lang;
+  block?: boolean;
+}) {
+  const t = (field: Localized | string) => translate(field, lang);
+  const width = block ? " w-full" : "";
+  return (
+    <>
+      {project.liveUrl && (
+        <a
+          href={project.liveUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={primaryButton + width}
+        >
+          <IconExternalLink size={15} strokeWidth={2} />
+          {t(ui.visitSite)}
+        </a>
+      )}
+      {project.doiUrl && (
+        <a
+          href={project.doiUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={primaryButton + width}
+        >
+          <IconFileText size={15} strokeWidth={2} />
+          {t(ui.readJournal)}
+        </a>
+      )}
+      {project.githubUrl && (
+        <a
+          href={project.githubUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={ghostButton + width}
+        >
+          <IconBrandGithub size={15} strokeWidth={1.75} />
+          {t(ui.github)}
+        </a>
+      )}
+    </>
+  );
+}
+
+// ─── Page ─────────────────────────────────────────────────────────────────────
+
+export default async function ProjectDetailPage({ params }: Props) {
   const { slug } = await params;
   const project = getProjectBySlug(slug);
-
   if (!project) notFound();
 
-  // Previous / next navigation
-  const allSlugs = getAllSlugs();
-  const currentIndex = allSlugs.indexOf(slug);
-  const prevSlug = currentIndex > 0 ? allSlugs[currentIndex - 1] : null;
-  const nextSlug = currentIndex < allSlugs.length - 1 ? allSlugs[currentIndex + 1] : null;
-  const prevProject = prevSlug ? getProjectBySlug(prevSlug) : null;
-  const nextProject = nextSlug ? getProjectBySlug(nextSlug) : null;
+  const lang = await getLang();
+  const t = (field: Localized | string) => translate(field, lang);
 
-  const gradient = categoryGradients[project.category] ?? categoryGradients.websites;
+  // Previous / next, wrapping around the data order
+  const index = projects.findIndex((p) => p.slug === slug);
+  const prevProject = projects[(index - 1 + projects.length) % projects.length];
+  const nextProject = projects[(index + 1) % projects.length];
+
+  const title = t(project.title);
+  const period = periodText(project, lang);
+  const mainImage = project.images[0];
+  const PlaceholderIcon = CATEGORY_ICONS[project.category];
+  const hasLinks = Boolean(project.liveUrl || project.doiUrl || project.githubUrl);
 
   return (
     <div className="w-full">
@@ -69,65 +180,94 @@ export default async function ProjectDetailPage({
           className="inline-flex items-center gap-1.5 font-jakarta text-xs font-medium text-ink-4 transition-colors hover:text-ink"
         >
           <IconArrowLeft size={13} strokeWidth={2} />
-          {t(ui.allProjects)}
+          {t(ui.backToProjects)}
         </Link>
       </div>
 
-      {/* Hero */}
-      <div className={`h-52 w-full bg-gradient-to-br ${gradient} flex items-center justify-center lg:h-64`}>
-        <span className="font-geist text-8xl font-bold text-void-edge-hi select-none">
-          {t(project.title).charAt(0)}
-        </span>
+      {/* ─── Hero ─── */}
+      <div className="border-b border-[#1A1A18] px-5 py-10 md:px-10 md:py-12 lg:px-16 lg:py-14">
+        <div className="flex flex-col gap-4">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className={badge}>{t(categoryLabels[project.category])}</span>
+            {inCategory(project, "research") && (
+              <span className={`${badge} font-semibold text-gold`}>{t(ui.sinta2)}</span>
+            )}
+            {project.organization && <span className={badge}>{project.organization}</span>}
+            {project.label && <span className={badge}>{t(project.label)}</span>}
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <h1 className="font-geist text-3xl font-bold tracking-tight text-ink lg:text-4xl">
+              {title}
+            </h1>
+            <p className="font-jakarta text-base text-ink-3">{t(project.subtitle)}</p>
+            {project.paperTitle && (
+              <p className="font-jakarta text-sm italic text-ink-4 md:max-w-2xl">
+                “{project.paperTitle}”
+                {project.journalName && <> — {project.journalName}</>}
+              </p>
+            )}
+          </div>
+
+          {period && (
+            <p className="flex items-center gap-1.5 font-mono text-xs text-ink-5">
+              <IconCalendar size={13} strokeWidth={1.75} />
+              {period}
+            </p>
+          )}
+
+          <p className="font-jakarta text-sm leading-relaxed text-ink-3 md:max-w-2xl md:text-base">
+            {t(project.description)}
+          </p>
+
+          {hasLinks && (
+            <div className="flex flex-col gap-3 md:flex-row md:flex-wrap md:items-center">
+              <ProjectLinks project={project} lang={lang} />
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* ─── Main image ─── */}
+      <div className="px-5 pt-6 md:px-10 md:pt-8 lg:px-16 lg:pt-10">
+        <div
+          className="relative flex aspect-[16/9] w-full items-center justify-center overflow-hidden rounded-xl"
+          style={{ background: "#1A1A18", border: "0.5px solid #1E1E1C" }}
+        >
+          {mainImage ? (
+            <Image
+              src={mainImage}
+              alt={title}
+              fill
+              preload
+              sizes="(min-width: 1024px) 70vw, 100vw"
+              className="object-contain"
+            />
+          ) : (
+            <PlaceholderIcon size={28} strokeWidth={1.5} style={{ color: "#252523" }} />
+          )}
+        </div>
+        {project.imageNote && (
+          <p className="mt-2 font-jakarta text-xs text-ink-4">{t(project.imageNote)}</p>
+        )}
       </div>
 
       <div className="px-5 py-6 md:px-10 md:py-8 lg:px-16 lg:py-10">
         <div className="grid gap-8 md:grid-cols-[1fr_220px] md:gap-10 lg:grid-cols-[1fr_280px] lg:gap-14">
           {/* ─── Left: Main content ─── */}
-          <div className="order-2 flex flex-col gap-10 md:order-1">
-            {/* Title block */}
-            <div className="flex flex-col gap-3">
-              <div className="flex flex-wrap items-center gap-2">
-                <span className="rounded-md border border-void-edge-hi bg-void-surface px-2.5 py-1 font-jakarta text-xs font-medium text-ink-3">
-                  {t(categoryLabels[project.category])}
-                </span>
-                {inCategory(project, "research") && (
-                  <span className="rounded-md border border-void-edge-hi bg-void-surface px-2.5 py-1 font-jakarta text-xs font-semibold text-gold">
-                    Sinta 2
-                  </span>
-                )}
-              </div>
-              <h1 className="font-geist text-3xl font-bold tracking-tight text-ink lg:text-4xl">
-                {t(project.title)}
-              </h1>
-              <p className="font-jakarta text-base text-ink-3">{t(project.subtitle)}</p>
-              {project.journalName && (
-                <p className="font-jakarta text-sm italic text-ink-4">
-                  {project.journalName}
-                </p>
-              )}
-              <p className="font-jakarta text-sm leading-relaxed text-ink-3">
-                {t(project.description)}
-              </p>
-            </div>
-
-            {/* Overview */}
+          <div className="order-2 flex min-w-0 flex-col gap-10 md:order-1">
             {project.overview && (
-              <div className="flex flex-col gap-3">
-                <h2 className="font-geist text-base font-semibold text-ink">
-                  {t(ui.overview)}
-                </h2>
+              <section className="flex flex-col gap-3">
+                <h2 className={sectionTitle}>{t(ui.overview)}</h2>
                 <p className="font-jakarta text-sm leading-relaxed text-ink-3">
                   {t(project.overview)}
                 </p>
-              </div>
+              </section>
             )}
 
-            {/* Process timeline */}
             {project.process && project.process.length > 0 && (
-              <div className="flex flex-col gap-4">
-                <h2 className="font-geist text-base font-semibold text-ink">
-                  {t(ui.process)}
-                </h2>
+              <section className="flex flex-col gap-4">
+                <h2 className={sectionTitle}>{t(ui.howItWorks)}</h2>
                 <div className="relative flex flex-col gap-0">
                   <div className="absolute left-[7px] top-2 h-[calc(100%-16px)] w-px bg-void-edge" />
                   {project.process.map((step, i) => (
@@ -146,21 +286,15 @@ export default async function ProjectDetailPage({
                     </div>
                   ))}
                 </div>
-              </div>
+              </section>
             )}
 
-            {/* Challenges & Solutions */}
             {project.challenges && project.challenges.length > 0 && (
-              <div className="flex flex-col gap-4">
-                <h2 className="font-geist text-base font-semibold text-ink">
-                  {t(ui.challenges)}
-                </h2>
+              <section className="flex flex-col gap-4">
+                <h2 className={sectionTitle}>{t(ui.challenges)}</h2>
                 <div className="flex flex-col gap-3">
                   {project.challenges.map((c, i) => (
-                    <div
-                      key={i}
-                      className="rounded-xl border border-void-edge bg-void-card p-4"
-                    >
+                    <div key={i} className="rounded-xl border border-void-edge bg-void-card p-4">
                       <p className="mb-1.5 font-jakarta text-sm font-medium text-ink-4">
                         <span className="mr-1.5 text-ink-5">{t(ui.problem)}</span>
                         {t(c.problem)}
@@ -172,161 +306,126 @@ export default async function ProjectDetailPage({
                     </div>
                   ))}
                 </div>
-              </div>
+              </section>
             )}
 
-            {/* Results */}
             {project.results && project.results.length > 0 && (
-              <div className="flex flex-col gap-4">
-                <h2 className="font-geist text-base font-semibold text-ink">
-                  {t(ui.results)}
-                </h2>
+              <section className="flex flex-col gap-4">
+                <h2 className={sectionTitle}>{t(ui.metrics)}</h2>
                 <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
                   {project.results.map((r) => (
                     <StatCard key={t(r.label)} label={t(r.label)} value={t(r.value)} />
                   ))}
                 </div>
-              </div>
+                {project.note && (
+                  <p className="font-jakarta text-xs text-ink-5">{t(project.note)}</p>
+                )}
+              </section>
+            )}
+
+            {project.demoVideo && (
+              <section className="flex flex-col gap-4">
+                <h2 className={sectionTitle}>{t(ui.demoVideo)}</h2>
+                <div className="rounded-xl border border-void-edge bg-void-card p-4">
+                  <video
+                    controls
+                    playsInline
+                    preload="metadata"
+                    poster={project.poster}
+                    src={project.demoVideo}
+                    className="mx-auto block w-full max-w-[320px] rounded-lg"
+                  />
+                </div>
+              </section>
+            )}
+
+            {project.images.length > 1 && (
+              <section className="flex flex-col gap-4">
+                <h2 className={sectionTitle}>{t(ui.screenshots)}</h2>
+                <ProjectGallery images={project.images} title={title} />
+                {project.imageNote && (
+                  <p className="font-jakarta text-xs text-ink-4">{t(project.imageNote)}</p>
+                )}
+              </section>
             )}
           </div>
 
-          {/* ─── Right: Sticky info panel ─── */}
-          <aside className="order-1 flex flex-col gap-4 md:order-2 md:sticky md:top-6 md:self-start">
+          {/* ─── Right: Info panel (sticky on desktop, plain block on mobile) ─── */}
+          <aside className="order-1 flex flex-col gap-4 md:order-2 md:sticky md:top-8 md:self-start">
             <div className="rounded-xl border border-void-edge bg-void-card p-5">
               <p className="mb-4 font-jakarta text-xs font-medium uppercase tracking-[0.15em] text-ink-5">
                 {t(ui.projectInfo)}
               </p>
-
               <div className="flex flex-col gap-3">
-                {project.year && (
-                  <div className="flex items-center gap-2.5">
-                    <IconCalendar size={14} strokeWidth={1.75} className="text-ink-5 shrink-0" />
-                    <div>
-                      <p className="font-jakarta text-xs text-ink-5">{t(ui.year)}</p>
-                      <p className="font-jakarta text-sm font-medium text-ink-2">
-                        {project.year}
-                      </p>
-                    </div>
-                  </div>
+                {period && <InfoRow icon={IconCalendar} label={t(ui.period)} value={period} />}
+                {project.role && (
+                  <InfoRow icon={IconUser} label={t(ui.role)} value={t(project.role)} />
                 )}
-                <div className="flex items-center gap-2.5">
-                  <IconTag size={14} strokeWidth={1.75} className="text-ink-5 shrink-0" />
-                  <div>
-                    <p className="font-jakarta text-xs text-ink-5">{t(ui.category)}</p>
-                    <p className="font-jakarta text-sm font-medium text-ink-2">
-                      {t(categoryLabels[project.category])}
-                    </p>
-                  </div>
-                </div>
                 {project.organization && (
-                  <div className="flex items-center gap-2.5">
-                    <IconTag size={14} strokeWidth={1.75} className="text-ink-5 shrink-0" />
-                    <div>
-                      <p className="font-jakarta text-xs text-ink-5">{t(ui.organization)}</p>
-                      <p className="font-jakarta text-sm font-medium text-ink-2">
-                        {project.organization}
-                      </p>
-                    </div>
-                  </div>
+                  <InfoRow
+                    icon={IconBuilding}
+                    label={t(ui.organization)}
+                    value={project.organization}
+                  />
                 )}
               </div>
             </div>
 
-            {/* Tech stack */}
             <div className="rounded-xl border border-void-edge bg-void-card p-5">
               <p className="mb-3 font-jakarta text-xs font-medium uppercase tracking-[0.15em] text-ink-5">
                 {t(ui.techStack)}
               </p>
               <div className="flex flex-wrap gap-2">
-                {project.tech.map((t) => (
+                {project.tech.map((tech) => (
                   <span
-                    key={t}
+                    key={tech}
                     className="rounded-lg border border-void-edge bg-void-surface px-2.5 py-1 font-jakarta text-xs font-medium text-ink-3"
                   >
-                    {t}
+                    {tech}
                   </span>
                 ))}
               </div>
             </div>
 
-            {/* Links */}
-            {(project.liveUrl || project.githubUrl || project.doiUrl) && (
+            {hasLinks && (
               <div className="flex flex-col gap-2">
-                {project.liveUrl && (
-                  <a
-                    href={project.liveUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center justify-center gap-2 rounded-xl bg-ink px-4 py-2.5 font-jakarta text-sm font-semibold text-void-base transition-opacity hover:opacity-85"
-                  >
-                    <IconExternalLink size={14} strokeWidth={2} />
-                    {t(ui.liveDemo)}
-                  </a>
-                )}
-                {project.githubUrl && (
-                  <a
-                    href={project.githubUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center justify-center gap-2 rounded-xl border border-void-edge px-4 py-2.5 font-jakarta text-sm font-medium text-ink-2 transition-colors hover:bg-void-raised hover:text-ink"
-                  >
-                    <IconBrandGithub size={14} strokeWidth={1.75} />
-                    {t(ui.github)}
-                  </a>
-                )}
-                {project.doiUrl && (
-                  <a
-                    href={project.doiUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center justify-center gap-2 rounded-xl border border-void-edge px-4 py-2.5 font-jakarta text-sm font-medium text-ink-2 transition-colors hover:bg-void-raised hover:text-ink"
-                  >
-                    <IconFileText size={14} strokeWidth={1.75} />
-                    {t(ui.viewDoi)}
-                  </a>
-                )}
+                <p className="font-jakarta text-xs font-medium uppercase tracking-[0.15em] text-ink-5">
+                  {t(ui.links)}
+                </p>
+                <ProjectLinks project={project} lang={lang} block />
               </div>
             )}
           </aside>
         </div>
       </div>
 
-      {/* ─── Prev / Next navigation ─── */}
+      {/* ─── Prev / Next navigation (wraps around) ─── */}
       <div className="border-t border-void-edge">
         <div className="grid grid-cols-2 px-5 md:px-10 lg:px-16">
-          {prevProject ? (
-            <Link
-              href={`/projects/${prevProject.slug}`}
-              className="flex flex-col gap-1 border-r border-void-edge py-6 pr-6 transition-colors hover:bg-void-card"
-            >
-              <span className="flex items-center gap-1 font-jakarta text-xs text-ink-5">
-                <IconArrowLeft size={11} strokeWidth={2} />
-                {t(ui.previous)}
-              </span>
-              <span className="font-geist text-sm font-semibold text-ink-2">
-                {t(prevProject.title)}
-              </span>
-            </Link>
-          ) : (
-            <div />
-          )}
-
-          {nextProject ? (
-            <Link
-              href={`/projects/${nextProject.slug}`}
-              className="flex flex-col items-end gap-1 py-6 pl-6 transition-colors hover:bg-void-card"
-            >
-              <span className="flex items-center gap-1 font-jakarta text-xs text-ink-5">
-                {t(ui.next)}
-                <IconArrowRight size={11} strokeWidth={2} />
-              </span>
-              <span className="font-geist text-sm font-semibold text-ink-2">
-                {t(nextProject.title)}
-              </span>
-            </Link>
-          ) : (
-            <div />
-          )}
+          <Link
+            href={`/projects/${prevProject.slug}`}
+            className="flex flex-col gap-1 border-r border-void-edge py-6 pr-6 transition-colors hover:bg-void-card"
+          >
+            <span className="flex items-center gap-1 font-jakarta text-xs text-ink-5">
+              <IconArrowLeft size={11} strokeWidth={2} />
+              {t(ui.previous)}
+            </span>
+            <span className="font-geist text-sm font-semibold text-ink-2">
+              {t(prevProject.title)}
+            </span>
+          </Link>
+          <Link
+            href={`/projects/${nextProject.slug}`}
+            className="flex flex-col items-end gap-1 py-6 pl-6 text-right transition-colors hover:bg-void-card"
+          >
+            <span className="flex items-center gap-1 font-jakarta text-xs text-ink-5">
+              {t(ui.next)}
+              <IconArrowRight size={11} strokeWidth={2} />
+            </span>
+            <span className="font-geist text-sm font-semibold text-ink-2">
+              {t(nextProject.title)}
+            </span>
+          </Link>
         </div>
       </div>
     </div>

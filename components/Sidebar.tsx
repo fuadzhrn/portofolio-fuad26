@@ -14,19 +14,23 @@ import {
   IconBrandLinkedin,
   IconBrandInstagram,
 } from "@tabler/icons-react";
+import LanguageToggle from "@/components/LanguageToggle";
+import { useT } from "@/components/LangProvider";
+import { ui } from "@/data/ui-strings";
+import { profile } from "@/data/profile";
 
 const NAV_ITEMS = [
-  { href: "/", icon: IconHome, label: "Home" },
-  { href: "/about", icon: IconUser, label: "About" },
-  { href: "/#skills", icon: IconCode, label: "Skills" },
-  { href: "/projects", icon: IconBriefcase, label: "Projects" },
-  { href: "/#contact", icon: IconMail, label: "Contact" },
+  { href: "/", icon: IconHome, label: ui.navHome },
+  { href: "/about", icon: IconUser, label: ui.navAbout },
+  { href: "/#skills", icon: IconCode, label: ui.navSkills },
+  { href: "/projects", icon: IconBriefcase, label: ui.navProjects },
+  { href: "/#contact", icon: IconMail, label: ui.navContact },
 ];
 
 const SOCIAL_ITEMS = [
-  { href: "https://github.com/fuadzahranfirman", icon: IconBrandGithub, label: "GitHub" },
-  { href: "#", icon: IconBrandLinkedin, label: "LinkedIn" },
-  { href: "#", icon: IconBrandInstagram, label: "Instagram" },
+  { href: profile.github.url, icon: IconBrandGithub, label: "GitHub" },
+  { href: profile.linkedin.url, icon: IconBrandLinkedin, label: "LinkedIn" },
+  { href: "#", icon: IconBrandInstagram, label: "Instagram" }, // TODO: ask owner — Instagram URL
 ];
 
 function Avatar() {
@@ -40,7 +44,7 @@ function Avatar() {
       {!error ? (
         <Image
           src="/images/avatar.jpg"
-          alt="M. Fuad Zahran"
+          alt={profile.shortName}
           fill
           className="object-cover"
           onError={() => setError(true)}
@@ -55,6 +59,7 @@ function Avatar() {
 }
 
 export default function Sidebar() {
+  const t = useT();
   const pathname = usePathname();
 
   const isActive = (href: string) => {
@@ -83,14 +88,14 @@ export default function Sidebar() {
               className="mt-3 text-center font-geist leading-none"
               style={{ fontSize: 13, fontWeight: 500, color: "#C8C8C2" }}
             >
-              M. Fuad Zahran
+              {profile.shortName}
             </span>
 
             <span
               className="mb-3 mt-1 text-center"
               style={{ fontSize: 11, color: "#3A3A38" }}
             >
-              Web Developer
+              {t(ui.sidebarRole)}
             </span>
 
             <span
@@ -107,7 +112,7 @@ export default function Sidebar() {
                 className="shrink-0 rounded-full bg-[#C9A96E]"
                 style={{ width: 5, height: 5, boxShadow: "0 0 5px #C9A96E99" }}
               />
-              Open to work
+              {t(ui.sidebarOpenToWork)}
             </span>
           </div>
         </div>
@@ -118,7 +123,7 @@ export default function Sidebar() {
             className="mb-1.5 hidden uppercase lg:block"
             style={{ fontSize: 9, letterSpacing: "0.12em", color: "#2A2A28", paddingLeft: 10 }}
           >
-            Menu
+            {t(ui.menu)}
           </p>
 
           <div className="flex flex-col gap-px">
@@ -142,7 +147,7 @@ export default function Sidebar() {
                       className="hidden lg:inline"
                       style={{ fontSize: 12.5, color: active ? "#888884" : "#333330" }}
                     >
-                      {item.label}
+                      {t(item.label)}
                     </span>
                   </div>
                 </Link>
@@ -172,13 +177,18 @@ export default function Sidebar() {
             })}
           </div>
 
+          {/* Language toggle (stacked on the 72px tablet sidebar) */}
+          <div className="mt-3 flex justify-center lg:justify-start">
+            <LanguageToggle compact />
+          </div>
+
           <p
             className="mt-2 hidden leading-[1.5] lg:block"
             style={{ fontSize: 9, color: "#252523" }}
           >
-            © 2024 M. Fuad Zahran.
+            © 2024 {profile.shortName}.
             <br />
-            All rights reserved.
+            {t(ui.rightsReserved)}
           </p>
         </div>
       </aside>
@@ -200,7 +210,7 @@ export default function Sidebar() {
                   style={{ color: active ? "#A0A09A" : "#383836" }}
                 />
                 <span style={{ fontSize: 9, color: active ? "#A0A09A" : "#383836" }}>
-                  {item.label}
+                  {t(item.label)}
                 </span>
               </div>
             </Link>

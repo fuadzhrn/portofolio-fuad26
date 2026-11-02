@@ -10,7 +10,7 @@ import {
   IconBrandLinkedin,
   IconSend,
 } from "@tabler/icons-react";
-import { t } from "@/lib/i18n";
+import { useT } from "@/components/LangProvider";
 import { ui } from "@/data/ui-strings";
 import { profile } from "@/data/profile";
 
@@ -25,7 +25,7 @@ const contactInfo = [
   {
     icon: IconMapPin,
     label: ui.location,
-    value: t(profile.location),
+    value: profile.location,
     href: null,
   },
   {
@@ -45,6 +45,7 @@ const contactInfo = [
 type FormState = "idle" | "sending" | "sent";
 
 export default function Contact() {
+  const t = useT();
   const [form, setForm] = useState({ name: "", email: "", message: "" });
   const [status, setStatus] = useState<FormState>("idle");
 
@@ -192,7 +193,7 @@ export default function Contact() {
                       {t(info.label)}
                     </span>
                     <span className="font-jakarta text-sm font-medium text-ink-2">
-                      {info.value}
+                      {t(info.value)}
                     </span>
                   </div>
                 </div>

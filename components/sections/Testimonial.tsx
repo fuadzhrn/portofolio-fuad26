@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { motion } from "framer-motion";
 import { IconStarFilled, IconStar, IconSparkles } from "@tabler/icons-react";
 import { fadeUp, stagger } from "@/lib/motion";
@@ -154,12 +155,12 @@ export default function Testimonial() {
                 Mari kita kerjakan sesuatu bersama.
               </p>
             </div>
-            <a
+            <Link
               href="/#contact"
               className="inline-flex items-center gap-1.5 rounded-xl border border-void-edge px-4 py-2 font-jakarta text-xs font-medium text-ink-4 transition-colors hover:bg-void-card hover:text-ink-2"
             >
               Hubungi Saya
-            </a>
+            </Link>
           </motion.div>
         </motion.div>
       </div>

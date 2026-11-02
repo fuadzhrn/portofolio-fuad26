@@ -8,7 +8,7 @@ import {
   IconChartBar,
 } from "@tabler/icons-react";
 import { fadeUp, stagger } from "@/lib/motion";
-import { t } from "@/lib/i18n";
+import { useT } from "@/components/LangProvider";
 import { ui } from "@/data/ui-strings";
 import { pillars } from "@/data/profile";
 
@@ -18,6 +18,7 @@ const PILLAR_ICONS = [IconCode, IconBrain, IconFaceId, IconChartBar];
 const values = pillars.map((p, i) => ({ ...p, icon: PILLAR_ICONS[i] }));
 
 export default function Value() {
+  const t = useT();
   return (
     <section className="w-full border-b border-[#1a1a18] px-5 py-10 md:px-10 md:py-12 lg:px-16 lg:py-16">
       <div>

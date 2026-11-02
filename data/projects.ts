@@ -35,7 +35,11 @@ export type Project = {
   doiUrl?: string;
   journalName?: string;
   paperTitle?: string;
+  // Extra badge in the detail hero (e.g. "Personal practice project").
+  label?: Localized;
   note?: Localized;
+  // Caption shown right under the project images (privacy / accuracy notes).
+  imageNote?: Localized;
   overview?: Localized;
   process?: { phase: Localized; description: Localized }[];
   challenges?: { problem: Localized; solution: Localized }[];
@@ -513,9 +517,9 @@ export const projects: Project[] = [
       en: "An internship monitoring dashboard built during my internship at PT Vale Indonesia. It uses a star-schema model with 6 tables and 5 KPI cards, prepared with Excel, SQL, Power Query and DAX.",
       id: "Dashboard monitoring magang yang dibuat selama magang di PT Vale Indonesia. Dashboard ini memakai model star schema dengan 6 tabel dan 5 kartu KPI, disiapkan dengan Excel, SQL, Power Query, dan DAX.",
     },
-    note: {
-      en: "All data shown is synthetic. PT Vale data is confidential and is not published.",
-      id: "Seluruh data yang ditampilkan adalah data sintetis. Data PT Vale bersifat rahasia dan tidak dipublikasikan.",
+    imageNote: {
+      en: "Synthetic data. Vale data is confidential.",
+      id: "Data sintetis. Data Vale bersifat rahasia.",
     },
     results: [
       { label: { en: "Interns", id: "Mahasiswa magang" }, value: { en: "1,008", id: "1.008" } },
@@ -539,6 +543,7 @@ export const projects: Project[] = [
     category: "design-docs",
     status: "completed",
     year: "2026",
+    label: { en: "Personal practice project", id: "Proyek latihan pribadi" },
     featured: false,
     images: [
       "/images/projects/figma-ui-design/langkasa-home.webp",
