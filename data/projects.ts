@@ -190,6 +190,7 @@ export const projects: Project[] = [
     category: "systems",
     status: "completed",
     year: "2026",
+    // TODO: ask owner — period
     featured: true,
     images: [
       "/images/projects/multi-branch-pos/dashboard.webp",
@@ -375,6 +376,7 @@ export const projects: Project[] = [
     category: "ai-data",
     status: "completed",
     year: "2025",
+    // TODO: ask owner — period
     role: {
       en: "Team of 2 · Face recognition pipeline and activity model training",
       id: "Tim 2 orang · Pipeline face recognition dan training model aktivitas",
@@ -442,6 +444,7 @@ export const projects: Project[] = [
     category: "ai-data",
     status: "completed",
     year: "2025",
+    period: { en: "Academic project", id: "Proyek akademik" },
     featured: false,
     images: ["/images/projects/shopping-trend-recommender/wordcloud.webp"],
     tech: ["Python", "Web scraping", "TF-IDF", "Cosine similarity"],
@@ -464,6 +467,7 @@ export const projects: Project[] = [
     category: "ai-data",
     status: "completed",
     year: "2025",
+    period: { en: "Academic project", id: "Proyek akademik" },
     featured: false,
     images: [], // TODO: no image yet
     tech: ["Python", "scikit-learn", "TF-IDF", "LDA", "SVM", "MLP"],
@@ -563,6 +567,7 @@ export const projects: Project[] = [
     category: "design-docs",
     status: "completed",
     year: "2026",
+    period: { en: "Academic project", id: "Proyek akademik" },
     featured: false,
     images: [
       "/images/projects/system-design-docs/sitemap.webp",

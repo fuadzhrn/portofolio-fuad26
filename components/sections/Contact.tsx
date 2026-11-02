@@ -5,36 +5,40 @@ import { motion } from "framer-motion";
 import { fadeUp, stagger } from "@/lib/motion";
 import {
   IconMail,
-  IconBrandWhatsapp,
   IconMapPin,
   IconBrandGithub,
+  IconBrandLinkedin,
   IconSend,
 } from "@tabler/icons-react";
+import { t } from "@/lib/i18n";
+import { ui } from "@/data/ui-strings";
+import { profile } from "@/data/profile";
 
+// No phone / WhatsApp: the repo is public.
 const contactInfo = [
   {
     icon: IconMail,
-    label: "Email",
-    value: "fuadzahran64@gmail.com",
-    href: "mailto:fuadzahran64@gmail.com",
-  },
-  {
-    icon: IconBrandWhatsapp,
-    label: "WhatsApp",
-    value: "+62 8xx-xxxx-xxxx",
-    href: "https://wa.me/628xxxxxxxxxx",
+    label: ui.email,
+    value: profile.email,
+    href: `mailto:${profile.email}`,
   },
   {
     icon: IconMapPin,
-    label: "Lokasi",
-    value: "Makassar, Sulawesi Selatan",
+    label: ui.location,
+    value: t(profile.location),
     href: null,
   },
   {
     icon: IconBrandGithub,
-    label: "GitHub",
-    value: "@fuadzahranfirman",
-    href: "https://github.com/fuadzahranfirman",
+    label: ui.github,
+    value: `@${profile.github.handle}`,
+    href: profile.github.url,
+  },
+  {
+    icon: IconBrandLinkedin,
+    label: ui.linkedin,
+    value: profile.linkedin.handle,
+    href: profile.linkedin.url,
   },
 ];
 
@@ -50,13 +54,13 @@ export default function Contact() {
 
     setStatus("sending");
 
-    const subject = encodeURIComponent(`Pesan dari ${form.name}`);
+    const subject = encodeURIComponent(`${t(ui.mailSubjectFrom)} ${form.name}`);
     const body = encodeURIComponent(
-      `Nama: ${form.name}\nEmail: ${form.email}\n\n${form.message}`
+      `${t(ui.formName)}: ${form.name}\n${t(ui.formEmail)}: ${form.email}\n\n${form.message}`
     );
 
     setTimeout(() => {
-      window.location.href = `mailto:fuadzahran64@gmail.com?subject=${subject}&body=${body}`;
+      window.location.href = `mailto:${profile.email}?subject=${subject}&body=${body}`;
       setStatus("sent");
       setForm({ name: "", email: "", message: "" });
     }, 400);
@@ -77,19 +81,19 @@ export default function Contact() {
             variants={fadeUp}
             className="mb-2 font-jakarta text-xs font-medium uppercase tracking-[0.2em] text-ink-4"
           >
-            Kontak
+            {t(ui.contact)}
           </motion.p>
           <motion.h2
             variants={fadeUp}
             className="font-geist text-3xl font-bold tracking-tight text-ink lg:text-4xl"
           >
-            Mari berkolaborasi
+            {t(ui.contactHeading)}
           </motion.h2>
           <motion.p
             variants={fadeUp}
             className="mt-3 max-w-md font-jakarta text-sm leading-relaxed text-ink-4"
           >
-            Punya proyek atau ide menarik? Saya selalu terbuka untuk diskusi.
+            {t(ui.contactIntro)}
           </motion.p>
         </motion.div>
 
@@ -106,12 +110,12 @@ export default function Contact() {
             <motion.div variants={fadeUp} className="grid gap-4 sm:grid-cols-2">
               <div className="flex flex-col gap-1.5">
                 <label className="font-jakarta text-xs font-medium text-ink-4">
-                  Nama
+                  {t(ui.formName)}
                 </label>
                 <input
                   type="text"
                   required
-                  placeholder="Nama kamu"
+                  placeholder={t(ui.formNamePlaceholder)}
                   value={form.name}
                   onChange={(e) => setForm({ ...form, name: e.target.value })}
                   className="rounded-xl border border-void-edge bg-void-card px-4 py-2.5 font-jakarta text-sm text-ink placeholder:text-ink-5 outline-none transition-colors focus:border-void-edge-hi"
@@ -119,12 +123,12 @@ export default function Contact() {
               </div>
               <div className="flex flex-col gap-1.5">
                 <label className="font-jakarta text-xs font-medium text-ink-4">
-                  Email
+                  {t(ui.formEmail)}
                 </label>
                 <input
                   type="email"
                   required
-                  placeholder="email@kamu.com"
+                  placeholder={t(ui.formEmailPlaceholder)}
                   value={form.email}
                   onChange={(e) => setForm({ ...form, email: e.target.value })}
                   className="rounded-xl border border-void-edge bg-void-card px-4 py-2.5 font-jakarta text-sm text-ink placeholder:text-ink-5 outline-none transition-colors focus:border-void-edge-hi"
@@ -134,12 +138,12 @@ export default function Contact() {
 
             <motion.div variants={fadeUp} className="flex flex-col gap-1.5">
               <label className="font-jakarta text-xs font-medium text-ink-4">
-                Pesan
+                {t(ui.formMessage)}
               </label>
               <textarea
                 required
                 rows={5}
-                placeholder="Ceritakan tentang proyek atau kebutuhanmu..."
+                placeholder={t(ui.formMessagePlaceholder)}
                 value={form.message}
                 onChange={(e) => setForm({ ...form, message: e.target.value })}
                 className="resize-none rounded-xl border border-void-edge bg-void-card px-4 py-3 font-jakarta text-sm text-ink placeholder:text-ink-5 outline-none transition-colors focus:border-void-edge-hi"
@@ -154,10 +158,10 @@ export default function Contact() {
               >
                 <IconSend size={15} strokeWidth={2} />
                 {status === "sending"
-                  ? "Membuka email..."
+                  ? t(ui.formSending)
                   : status === "sent"
-                    ? "Email dibuka ✓"
-                    : "Kirim Pesan"}
+                    ? t(ui.formSent)
+                    : t(ui.formSend)}
               </button>
             </motion.div>
           </motion.form>
@@ -174,7 +178,7 @@ export default function Contact() {
               variants={fadeUp}
               className="mb-1 font-jakarta text-xs font-medium uppercase tracking-[0.15em] text-ink-5"
             >
-              Info Kontak
+              {t(ui.contactInfo)}
             </motion.p>
             {contactInfo.map((info) => {
               const Icon = info.icon;
@@ -185,7 +189,7 @@ export default function Contact() {
                   </div>
                   <div className="flex flex-col gap-0.5">
                     <span className="font-jakarta text-[10px] text-ink-5">
-                      {info.label}
+                      {t(info.label)}
                     </span>
                     <span className="font-jakarta text-sm font-medium text-ink-2">
                       {info.value}
@@ -195,7 +199,7 @@ export default function Contact() {
               );
 
               return (
-                <motion.div key={info.label} variants={fadeUp}>
+                <motion.div key={info.label.en} variants={fadeUp}>
                   {info.href ? (
                     <a
                       href={info.href}
@@ -221,10 +225,9 @@ export default function Contact() {
                 <span className="relative inline-flex h-2 w-2 rounded-full bg-gold" />
               </span>
               <p className="font-jakarta text-xs leading-relaxed text-ink-4">
-                Saat ini{" "}
-                <span className="font-semibold text-gold">tersedia</span> untuk
-                proyek freelance, magang, atau posisi full-time. Biasanya
-                membalas dalam 24 jam.
+                {t(ui.availabilityBefore)}{" "}
+                <span className="font-semibold text-gold">{t(ui.availabilityHighlight)}</span>{" "}
+                {t(ui.availabilityAfter)}
               </p>
             </motion.div>
           </motion.div>

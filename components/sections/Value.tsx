@@ -2,35 +2,20 @@
 
 import { motion } from "framer-motion";
 import {
-  IconPuzzle,
-  IconStack2,
-  IconFlask,
-  IconBolt,
+  IconCode,
+  IconBrain,
+  IconFaceId,
+  IconChartBar,
 } from "@tabler/icons-react";
 import { fadeUp, stagger } from "@/lib/motion";
+import { t } from "@/lib/i18n";
+import { ui } from "@/data/ui-strings";
+import { pillars } from "@/data/profile";
 
-const values = [
-  {
-    icon: IconPuzzle,
-    title: "Problem Solver",
-    desc: "Saya tidak hanya menulis kode — saya memahami masalah bisnis terlebih dahulu dan mencari solusi yang tepat sasaran.",
-  },
-  {
-    icon: IconStack2,
-    title: "End-to-End",
-    desc: "Dari wireframe di Figma hingga deployment di server, semua fase pengembangan saya tangani dengan standar yang konsisten.",
-  },
-  {
-    icon: IconFlask,
-    title: "Research-Backed",
-    desc: "Setiap keputusan teknis saya dukung dengan riset dan best practice terkini — bukan sekadar ikut tren.",
-  },
-  {
-    icon: IconBolt,
-    title: "Fast & Communicative",
-    desc: "Responsif, update berkala, dan selalu on-time. Saya percaya komunikasi yang baik adalah setengah dari keberhasilan proyek.",
-  },
-];
+// One icon per pillar, in the same order as `pillars` in data/profile.ts.
+const PILLAR_ICONS = [IconCode, IconBrain, IconFaceId, IconChartBar];
+
+const values = pillars.map((p, i) => ({ ...p, icon: PILLAR_ICONS[i] }));
 
 export default function Value() {
   return (
@@ -48,13 +33,13 @@ export default function Value() {
             variants={fadeUp}
             className="mb-2 font-jakarta text-xs font-medium uppercase tracking-[0.2em] text-ink-4"
           >
-            Kenapa Saya?
+            {t(ui.whyMe)}
           </motion.p>
           <motion.h2
             variants={fadeUp}
             className="font-geist text-3xl font-bold tracking-tight text-ink lg:text-4xl"
           >
-            Nilai yang saya bawa
+            {t(ui.whatIBring)}
           </motion.h2>
         </motion.div>
 
@@ -70,7 +55,7 @@ export default function Value() {
             const Icon = v.icon;
             return (
               <motion.div
-                key={v.title}
+                key={v.title.en}
                 variants={fadeUp}
                 className="group flex flex-col gap-4 rounded-xl border border-void-edge bg-void-card p-6 transition-colors duration-200 hover:border-void-edge-hi hover:bg-void-raised"
               >
@@ -79,10 +64,10 @@ export default function Value() {
                 </div>
                 <div className="flex flex-col gap-1.5">
                   <h3 className="font-geist text-base font-semibold text-ink">
-                    {v.title}
+                    {t(v.title)}
                   </h3>
                   <p className="font-jakarta text-sm leading-relaxed text-ink-4">
-                    {v.desc}
+                    {t(v.description)}
                   </p>
                 </div>
               </motion.div>

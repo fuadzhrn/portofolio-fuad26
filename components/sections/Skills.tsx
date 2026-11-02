@@ -1,14 +1,20 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { IconLock, IconBrandAws, IconBrandVscode } from "@tabler/icons-react";
 import {
-  SiHtml5, SiCss, SiJavascript, SiReact, SiTailwindcss,
-  SiPhp, SiLaravel, SiMysql, SiNodedotjs, SiPython,
+  IconLock, IconBrandAws, IconBrandVscode,
+  IconSql, IconApi, IconFileSpreadsheet, IconChartBar,
+} from "@tabler/icons-react";
+import {
+  SiHtml5, SiCss, SiJavascript,
+  SiPhp, SiLaravel, SiMysql, SiPython,
+  SiFastapi, SiYolo, SiOpencv,
   SiNextdotjs, SiVuedotjs, SiTypescript,
-  SiFigma, SiGithub, SiDocker,
+  SiFigma, SiGit, SiGithub, SiDocker,
 } from "react-icons/si";
 import { fadeUp, stagger } from "@/lib/motion";
+import { t } from "@/lib/i18n";
+import { ui } from "@/data/ui-strings";
 import GithubGraph from "@/components/sections/GithubGraph";
 import type { ContributionData } from "@/lib/github";
 
@@ -20,28 +26,35 @@ type Skill = {
   learning?: boolean;
 };
 
+// Skills without a brand icon (SQL, REST API, Excel, Power BI) use a generic
+// Tabler icon, like VS Code and AWS.
 const frontendBackend: Skill[] = [
   { name: "HTML5",        icon: SiHtml5,       color: "#E34F26" },
   { name: "CSS3",         icon: SiCss,         color: "#1572B6" },
   { name: "JavaScript",   icon: SiJavascript,  color: "#F7DF1E" },
-  { name: "React.js",     icon: SiReact,       color: "#61DAFB" },
-  { name: "Tailwind CSS", icon: SiTailwindcss, color: "#06B6D4" },
   { name: "PHP",          icon: SiPhp,         color: "#777BB4" },
   { name: "Laravel",      icon: SiLaravel,     color: "#FF2D20" },
   { name: "MySQL",        icon: SiMysql,       color: "#4479A1" },
-  { name: "Node.js",      icon: SiNodedotjs,   color: "#339933" },
-  { name: "Python",       icon: SiPython,      color: "#3776AB", learning: true },
+  { name: "Python",       icon: SiPython,      color: "#3776AB" },
+  { name: "FastAPI",      icon: SiFastapi,     color: "#009688" },
+  { name: "YOLOv8",       icon: SiYolo,        color: "#A0A09A" },
+  { name: "OpenCV",       icon: SiOpencv,      color: "#5C3EE8" },
+  { name: "SQL",          icon: IconSql,       color: "#A0A09A", tabler: true },
+  { name: "REST API",     icon: IconApi,       color: "#A0A09A", tabler: true },
   { name: "Next.js",      icon: SiNextdotjs,   color: "#A0A09A", learning: true },
   { name: "Vue.js",       icon: SiVuedotjs,    color: "#4FC08D", learning: true },
   { name: "TypeScript",   icon: SiTypescript,  color: "#3178C6", learning: true },
 ];
 
 const tools: Skill[] = [
-  { name: "Figma",   icon: SiFigma,        color: "#F24E1E" },
-  { name: "GitHub",  icon: SiGithub,       color: "#A0A09A" },
-  { name: "VS Code", icon: IconBrandVscode, color: "#007ACC", tabler: true },
-  { name: "AWS",     icon: IconBrandAws,   color: "#FF9900", tabler: true, learning: true },
-  { name: "Docker",  icon: SiDocker,       color: "#2496ED", learning: true },
+  { name: "Excel",    icon: IconFileSpreadsheet, color: "#217346", tabler: true },
+  { name: "Power BI", icon: IconChartBar,       color: "#F2C811", tabler: true },
+  { name: "Figma",    icon: SiFigma,            color: "#F24E1E" },
+  { name: "Git",      icon: SiGit,              color: "#F05032" },
+  { name: "GitHub",   icon: SiGithub,           color: "#A0A09A" },
+  { name: "VS Code",  icon: IconBrandVscode,    color: "#007ACC", tabler: true },
+  { name: "AWS",      icon: IconBrandAws,       color: "#FF9900", tabler: true, learning: true },
+  { name: "Docker",   icon: SiDocker,           color: "#2496ED", learning: true },
 ];
 
 function SkillCard({ skill }: { skill: Skill }) {
@@ -103,16 +116,16 @@ export default function Skills({ contributions }: Props) {
             variants={fadeUp}
             className="font-geist text-3xl font-bold tracking-tight text-ink lg:text-4xl"
           >
-            Keahlian & teknologi
+            {t(ui.skillsHeading)}
           </motion.h2>
           <motion.p
             variants={fadeUp}
             className="mt-3 font-jakarta text-sm leading-relaxed text-ink-4"
           >
-            Skill yang saya kuasai dan sedang dipelajari.{" "}
+            {t(ui.skillsIntro)}{" "}
             <span className="inline-flex items-center gap-1 text-ink-5">
               <IconLock size={11} strokeWidth={2} />
-              <span>= sedang dipelajari</span>
+              <span>{t(ui.learning)}</span>
             </span>
           </motion.p>
         </motion.div>
@@ -129,7 +142,7 @@ export default function Skills({ contributions }: Props) {
             variants={fadeUp}
             className="mb-4 font-jakarta text-xs font-medium uppercase tracking-[0.15em] text-ink-5"
           >
-            Languages & Frameworks
+            {t(ui.languagesFrameworks)}
           </motion.p>
           <motion.div
             variants={stagger}
@@ -152,7 +165,7 @@ export default function Skills({ contributions }: Props) {
             variants={fadeUp}
             className="mb-4 font-jakarta text-xs font-medium uppercase tracking-[0.15em] text-ink-5"
           >
-            Tools & Platform
+            {t(ui.toolsPlatform)}
           </motion.p>
           <motion.div
             variants={stagger}

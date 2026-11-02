@@ -3,39 +3,9 @@
 import { motion } from "framer-motion";
 import { IconMapPin, IconBriefcase, IconMail } from "@tabler/icons-react";
 import { fadeUp, stagger } from "@/lib/motion";
-
-const timeline = [
-  {
-    year: "2020",
-    title: "Mulai S1 Teknik Komputer",
-    desc: "Masuk jurusan Teknik Komputer. Mulai belajar pemrograman dan pengembangan web secara serius.",
-    active: false,
-  },
-  {
-    year: "2022",
-    title: "Terlibat Riset Pertama",
-    desc: "Bergabung dengan kelompok riset kampus. Mulai mengeksplorasi machine learning dan computer vision.",
-    active: false,
-  },
-  {
-    year: "2023",
-    title: "Magang Web Developer",
-    desc: "Magang 3 bulan di PT Teknologi Digital Indonesia. Membangun 5 modul dashboard analytics production.",
-    active: false,
-  },
-  {
-    year: "2023",
-    title: "Jurnal Sinta 2 Pertama",
-    desc: "Penelitian tentang deteksi penyakit tanaman berhasil dipublikasikan di JITCS (Sinta 2).",
-    active: false,
-  },
-  {
-    year: "2024",
-    title: "Lulus S1 & Jurnal Kedua",
-    desc: "Fresh graduate Teknik Komputer. Jurnal kedua tentang klasifikasi motif batik dipublikasikan di IJCCS.",
-    active: true,
-  },
-];
+import { t } from "@/lib/i18n";
+import { ui } from "@/data/ui-strings";
+import { profile, bio, timeline } from "@/data/profile";
 
 export default function About() {
   return (
@@ -53,13 +23,13 @@ export default function About() {
             variants={fadeUp}
             className="mb-2 font-jakarta text-xs font-medium uppercase tracking-[0.2em] text-ink-4"
           >
-            About Me
+            {t(ui.aboutMe)}
           </motion.p>
           <motion.h2
             variants={fadeUp}
             className="font-geist text-3xl font-bold tracking-tight text-ink lg:text-4xl"
           >
-            Sedikit tentang saya
+            {t(ui.aboutTeaserHeading)}
           </motion.h2>
         </motion.div>
 
@@ -97,21 +67,21 @@ export default function About() {
                   <span className="relative inline-flex h-2 w-2 rounded-full bg-gold" />
                 </span>
                 <span className="font-jakarta text-xs font-semibold text-gold">
-                  Open to Work
+                  {t(ui.openToWork)}
                 </span>
               </div>
               <div className="flex flex-col gap-1.5">
                 <div className="flex items-center gap-2 text-ink-4">
                   <IconMapPin size={13} strokeWidth={1.75} />
-                  <span className="font-jakarta text-xs">Makassar, Sulawesi Selatan</span>
+                  <span className="font-jakarta text-xs">{t(profile.location)}</span>
                 </div>
                 <div className="flex items-center gap-2 text-ink-4">
                   <IconBriefcase size={13} strokeWidth={1.75} />
-                  <span className="font-jakarta text-xs">Remote / On-site</span>
+                  <span className="font-jakarta text-xs">{t(profile.openTo)}</span>
                 </div>
                 <div className="flex items-center gap-2 text-ink-4">
                   <IconMail size={13} strokeWidth={1.75} />
-                  <span className="font-jakarta text-xs">fuadzahran64@gmail.com</span>
+                  <span className="font-jakarta text-xs">{profile.email}</span>
                 </div>
               </div>
             </motion.div>
@@ -127,27 +97,23 @@ export default function About() {
           >
             {/* Bio */}
             <motion.div variants={fadeUp} className="flex flex-col gap-3">
-              <p className="font-jakarta text-base leading-relaxed text-ink-3">
-                Saya adalah <span className="text-ink">Muh Fuad Zahran Firman</span>,
-                seorang Web Developer fresh graduate dari jurusan Teknik Komputer
-                yang berbasis di Makassar, Sulawesi Selatan.
-              </p>
-              <p className="font-jakarta text-base leading-relaxed text-ink-3">
-                Selain membangun produk web end-to-end untuk klien, saya juga
-                aktif di dunia riset akademik — dengan 2 publikasi di jurnal
-                bereputasi Sinta 2 di bidang computer vision dan deep learning.
-              </p>
-              <p className="font-jakarta text-base leading-relaxed text-ink-3">
-                Saya percaya bahwa kode yang baik bukan hanya yang bekerja,
-                tapi yang mudah dipahami, di-maintain, dan memberikan dampak
-                nyata bagi penggunanya.
-              </p>
+              {bio.map((paragraph, i) => (
+                <p key={i} className="font-jakarta text-base leading-relaxed text-ink-3">
+                  {paragraph.map((seg, j) =>
+                    seg.strong ? (
+                      <span key={j} className="text-ink">{t(seg.text)}</span>
+                    ) : (
+                      t(seg.text)
+                    )
+                  )}
+                </p>
+              ))}
             </motion.div>
 
             {/* Timeline */}
             <motion.div variants={fadeUp} className="flex flex-col">
               <p className="mb-4 font-jakarta text-xs font-medium uppercase tracking-[0.15em] text-ink-5">
-                Perjalanan
+                {t(ui.journey)}
               </p>
               <div className="relative flex flex-col gap-0">
                 {/* vertical line */}
@@ -171,11 +137,11 @@ export default function About() {
                           {item.year}
                         </span>
                         <span className="font-jakarta text-sm font-semibold text-ink">
-                          {item.title}
+                          {t(item.title)}
                         </span>
                       </div>
                       <p className="font-jakarta text-sm leading-relaxed text-ink-4">
-                        {item.desc}
+                        {t(item.description)}
                       </p>
                     </div>
                   </div>

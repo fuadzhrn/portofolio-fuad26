@@ -52,4 +52,83 @@ export const ui = {
   selectedProjects: { en: "Selected projects", id: "Proyek pilihan" },
   viewDetails: { en: "View Details", id: "Lihat Detail" },
   viewAllProjects: { en: "View All Projects", id: "Lihat Semua Proyek" },
+
+  // ── Home: hero ──────────────────────────────────────────────────────────────
+  hiIm: { en: "Hi, I'm", id: "Halo, saya" },
+  viewProjects: { en: "View Projects", id: "Lihat Proyek" },
+  contactMe: { en: "Contact Me", id: "Hubungi Saya" },
+
+  // ── Home: about teaser ──────────────────────────────────────────────────────
+  aboutMe: { en: "About Me", id: "Tentang Saya" },
+  aboutTeaserHeading: { en: "A little about me", id: "Sedikit tentang saya" },
+  openToWork: { en: "Open to Work", id: "Terbuka untuk Bekerja" },
+  journey: { en: "Journey", id: "Perjalanan" },
+
+  // ── Home: what I bring ──────────────────────────────────────────────────────
+  whyMe: { en: "Why Me?", id: "Kenapa Saya?" },
+  whatIBring: { en: "What I bring", id: "Nilai yang saya bawa" },
+
+  // ── Home: skills ────────────────────────────────────────────────────────────
+  skillsHeading: { en: "Skills & technologies", id: "Keahlian & teknologi" },
+  skillsIntro: {
+    en: "Skills I use and skills I'm learning.",
+    id: "Skill yang saya kuasai dan sedang dipelajari.",
+  },
+  learning: { en: "= learning", id: "= sedang dipelajari" },
+  languagesFrameworks: { en: "Languages & Frameworks", id: "Bahasa & Framework" },
+  toolsPlatform: { en: "Tools & Platform", id: "Tools & Platform" },
+
+  // ── Home: contact ───────────────────────────────────────────────────────────
+  contact: { en: "Contact", id: "Kontak" },
+  contactHeading: { en: "Let's work together", id: "Mari berkolaborasi" },
+  contactIntro: {
+    en: "Have a project or a role in mind? I'm always open to a conversation.",
+    id: "Punya proyek atau lowongan yang cocok? Saya selalu terbuka untuk diskusi.",
+  },
+  formName: { en: "Name", id: "Nama" },
+  formNamePlaceholder: { en: "Your name", id: "Nama kamu" },
+  formEmail: { en: "Email", id: "Email" },
+  formEmailPlaceholder: { en: "you@email.com", id: "email@kamu.com" },
+  formMessage: { en: "Message", id: "Pesan" },
+  formMessagePlaceholder: {
+    en: "Tell me about your project or role...",
+    id: "Ceritakan tentang proyek atau kebutuhanmu...",
+  },
+  formSending: { en: "Opening email...", id: "Membuka email..." },
+  formSent: { en: "Email opened ✓", id: "Email dibuka ✓" },
+  formSend: { en: "Send Message", id: "Kirim Pesan" },
+  mailSubjectFrom: { en: "Message from", id: "Pesan dari" },
+  contactInfo: { en: "Contact Info", id: "Info Kontak" },
+  email: { en: "Email", id: "Email" },
+  location: { en: "Location", id: "Lokasi" },
+  linkedin: { en: "LinkedIn", id: "LinkedIn" },
+  availabilityBefore: { en: "Currently", id: "Saat ini" },
+  availabilityHighlight: { en: "open to work", id: "terbuka" },
+  availabilityAfter: {
+    en: "for freelance projects and full-time roles — Makassar, Jakarta, Surabaya or remote.",
+    id: "untuk proyek freelance dan posisi full-time — Makassar, Jakarta, Surabaya, atau remote.",
+  },
+
+  // ── /about ──────────────────────────────────────────────────────────────────
+  bioTag: { en: "01 — bio", id: "01 — bio" },
+  bioTitle: { en: "More than just writing code.", id: "Lebih dari sekadar menulis kode." },
+  downloadCv: { en: "Download CV", id: "Unduh CV" },
+  timelineTag: { en: "02 — journey", id: "02 — perjalanan" },
+  timelineEyebrow: { en: "Timeline", id: "Timeline" },
+  timelineTitle: { en: "The journey that shaped me.", id: "Perjalanan yang membentuk saya." },
+  educationTag: { en: "03 — education", id: "03 — pendidikan" },
+  educationEyebrow: { en: "Education & Internships", id: "Pendidikan & Magang" },
+  educationTitle: { en: "Where I studied and worked.", id: "Tempat saya belajar dan bekerja." },
+  certsTag: { en: "04 — certifications", id: "04 — sertifikasi" },
+  certsEyebrow: { en: "Certifications & Publications", id: "Sertifikasi & Publikasi" },
+  certsTitle: {
+    en: "Certified skills, published research.",
+    id: "Kompetensi tersertifikasi, riset yang terbit.",
+  },
+  sinta2: { en: "SINTA 2", id: "SINTA 2" },
+  ctaHeading: { en: "Interested in working together?", id: "Tertarik bekerja sama?" },
+  ctaBody: {
+    en: "I'm open to freelance projects and full-time roles — in Makassar, Jakarta, Surabaya or remote.",
+    id: "Saya terbuka untuk proyek freelance dan posisi full-time — di Makassar, Jakarta, Surabaya, atau remote.",
+  },
 } satisfies Record<string, Localized>;
