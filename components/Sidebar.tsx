@@ -44,9 +44,10 @@ function Avatar() {
       {!error ? (
         <Image
           src="/images/avatar.jpg"
-          alt={profile.shortName}
+          alt={profile.name}
           fill
-          className="object-cover"
+          sizes="(min-width: 1024px) 72px, 40px"
+          className="rounded-full object-cover"
           onError={() => setError(true)}
         />
       ) : (

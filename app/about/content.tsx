@@ -125,10 +125,11 @@ function AvatarPhoto() {
     >
       {!error ? (
         <Image
-          src="/images/avatar.jpg"
+          src="/images/portrait.jpg"
           alt={profile.name}
           fill
-          className="object-cover"
+          sizes="180px"
+          className="object-cover object-top"
           onError={() => setError(true)}
         />
       ) : (

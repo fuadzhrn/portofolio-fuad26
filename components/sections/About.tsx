@@ -1,5 +1,7 @@
 "use client";
 
+import { useState } from "react";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { IconMapPin, IconBriefcase, IconMail } from "@tabler/icons-react";
 import { fadeUp, stagger } from "@/lib/motion";
@@ -9,6 +11,7 @@ import { profile, bio, timeline } from "@/data/profile";
 
 export default function About() {
   const t = useT();
+  const [photoError, setPhotoError] = useState(false);
   return (
     <section id="about" className="w-full border-b border-[#1a1a18] px-5 py-10 md:px-10 md:py-12 lg:px-16 lg:py-16">
       <div>
@@ -43,16 +46,27 @@ export default function About() {
             variants={stagger}
             className="flex flex-col items-center gap-4 md:items-start"
           >
-            {/* Avatar placeholder */}
+            {/* Avatar */}
             <motion.div
               variants={fadeUp}
               className="relative h-[120px] w-[120px] overflow-hidden rounded-2xl border border-void-edge bg-void-raised md:h-[160px] md:w-[160px] lg:h-[200px] lg:w-[200px]"
             >
-              <div className="flex h-full w-full items-center justify-center">
-                <span className="font-geist text-5xl font-bold text-ink-5">
-                  MFZ
-                </span>
-              </div>
+              {!photoError ? (
+                <Image
+                  src="/images/avatar.jpg"
+                  alt={profile.name}
+                  fill
+                  sizes="(min-width: 1024px) 200px, (min-width: 768px) 160px, 120px"
+                  className="object-cover object-top"
+                  onError={() => setPhotoError(true)}
+                />
+              ) : (
+                <div className="flex h-full w-full items-center justify-center">
+                  <span className="font-geist text-5xl font-bold text-ink-5">
+                    MFZ
+                  </span>
+                </div>
+              )}
               {/* decorative gradient */}
               <div className="absolute inset-0 bg-gradient-to-tr from-void-base/50 to-transparent" />
             </motion.div>

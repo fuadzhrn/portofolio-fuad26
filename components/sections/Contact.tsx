@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { motion } from "framer-motion";
 import { fadeUp, stagger } from "@/lib/motion";
 import {
@@ -8,13 +7,22 @@ import {
   IconMapPin,
   IconBrandGithub,
   IconBrandLinkedin,
-  IconSend,
+  IconDownload,
 } from "@tabler/icons-react";
 import { useT } from "@/components/LangProvider";
+import CopyEmailButton from "@/components/CopyEmailButton";
 import { ui } from "@/data/ui-strings";
 import { profile } from "@/data/profile";
 
 // No phone / WhatsApp: the repo is public.
+const MAILTO = `mailto:${profile.email}?subject=Project%20inquiry`;
+
+// Same button styles as the Hero CTAs.
+const primaryButton =
+  "inline-flex items-center justify-center gap-2 rounded-xl bg-ink px-5 py-2.5 font-jakarta text-sm font-semibold text-void-base transition-opacity duration-150 hover:opacity-85";
+const ghostButton =
+  "inline-flex items-center justify-center gap-2 rounded-xl border border-void-edge px-5 py-2.5 font-jakarta text-sm font-semibold text-ink-2 transition-colors duration-150 hover:bg-void-raised hover:text-ink";
+
 const contactInfo = [
   {
     icon: IconMail,
@@ -42,30 +50,8 @@ const contactInfo = [
   },
 ];
 
-type FormState = "idle" | "sending" | "sent";
-
 export default function Contact() {
   const t = useT();
-  const [form, setForm] = useState({ name: "", email: "", message: "" });
-  const [status, setStatus] = useState<FormState>("idle");
-
-  const handleSubmit = (e: React.SyntheticEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (!form.name || !form.email || !form.message) return;
-
-    setStatus("sending");
-
-    const subject = encodeURIComponent(`${t(ui.mailSubjectFrom)} ${form.name}`);
-    const body = encodeURIComponent(
-      `${t(ui.formName)}: ${form.name}\n${t(ui.formEmail)}: ${form.email}\n\n${form.message}`
-    );
-
-    setTimeout(() => {
-      window.location.href = `mailto:${profile.email}?subject=${subject}&body=${body}`;
-      setStatus("sent");
-      setForm({ name: "", email: "", message: "" });
-    }, 400);
-  };
 
   return (
     <section id="contact" className="w-full border-b border-[#1a1a18] px-5 py-10 md:px-10 md:py-12 lg:px-16 lg:py-16">
@@ -99,73 +85,47 @@ export default function Contact() {
         </motion.div>
 
         <div className="grid gap-8 md:grid-cols-2 md:gap-10 lg:grid-cols-[1fr_320px] lg:gap-14">
-          {/* Form */}
-          <motion.form
+          {/* Call to action (above the info panel on mobile) */}
+          <motion.div
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: "-60px" }}
             variants={stagger}
-            onSubmit={handleSubmit}
-            className="order-2 flex flex-col gap-4 md:order-1"
           >
-            <motion.div variants={fadeUp} className="grid gap-4 sm:grid-cols-2">
-              <div className="flex flex-col gap-1.5">
-                <label className="font-jakarta text-xs font-medium text-ink-4">
-                  {t(ui.formName)}
-                </label>
-                <input
-                  type="text"
-                  required
-                  placeholder={t(ui.formNamePlaceholder)}
-                  value={form.name}
-                  onChange={(e) => setForm({ ...form, name: e.target.value })}
-                  className="rounded-xl border border-void-edge bg-void-card px-4 py-2.5 font-jakarta text-sm text-ink placeholder:text-ink-5 outline-none transition-colors focus:border-void-edge-hi"
-                />
+            <motion.div
+              variants={fadeUp}
+              className="flex flex-col gap-4 rounded-xl border border-void-edge bg-void-card p-6"
+            >
+              <h3 className="font-geist text-base font-semibold text-ink">
+                {t(ui.ctaCardTitle)}
+              </h3>
+              <p className="font-jakarta text-sm leading-relaxed text-ink-4">
+                {t(ui.ctaCardBody)}
+              </p>
+              <div className="flex flex-wrap gap-3">
+                <a href={MAILTO} className={primaryButton}>
+                  <IconMail size={15} strokeWidth={2} />
+                  {t(ui.emailMe)}
+                </a>
+                <a
+                  href={profile.linkedin.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={ghostButton}
+                >
+                  <IconBrandLinkedin size={15} strokeWidth={1.75} />
+                  {t(ui.linkedin)}
+                </a>
+                {/* TODO: add CV file — public/cv/cv-fuad-zahran.pdf, then set profile.cvUrl */}
+                {profile.cvUrl && (
+                  <a href={profile.cvUrl} download className={ghostButton}>
+                    <IconDownload size={15} strokeWidth={1.75} />
+                    {t(ui.downloadCv)}
+                  </a>
+                )}
               </div>
-              <div className="flex flex-col gap-1.5">
-                <label className="font-jakarta text-xs font-medium text-ink-4">
-                  {t(ui.formEmail)}
-                </label>
-                <input
-                  type="email"
-                  required
-                  placeholder={t(ui.formEmailPlaceholder)}
-                  value={form.email}
-                  onChange={(e) => setForm({ ...form, email: e.target.value })}
-                  className="rounded-xl border border-void-edge bg-void-card px-4 py-2.5 font-jakarta text-sm text-ink placeholder:text-ink-5 outline-none transition-colors focus:border-void-edge-hi"
-                />
-              </div>
             </motion.div>
-
-            <motion.div variants={fadeUp} className="flex flex-col gap-1.5">
-              <label className="font-jakarta text-xs font-medium text-ink-4">
-                {t(ui.formMessage)}
-              </label>
-              <textarea
-                required
-                rows={5}
-                placeholder={t(ui.formMessagePlaceholder)}
-                value={form.message}
-                onChange={(e) => setForm({ ...form, message: e.target.value })}
-                className="resize-none rounded-xl border border-void-edge bg-void-card px-4 py-3 font-jakarta text-sm text-ink placeholder:text-ink-5 outline-none transition-colors focus:border-void-edge-hi"
-              />
-            </motion.div>
-
-            <motion.div variants={fadeUp}>
-              <button
-                type="submit"
-                disabled={status === "sending" || status === "sent"}
-                className="inline-flex items-center gap-2 rounded-xl bg-ink px-6 py-2.5 font-jakarta text-sm font-semibold text-void-base transition-opacity hover:opacity-85 disabled:opacity-50"
-              >
-                <IconSend size={15} strokeWidth={2} />
-                {status === "sending"
-                  ? t(ui.formSending)
-                  : status === "sent"
-                    ? t(ui.formSent)
-                    : t(ui.formSend)}
-              </button>
-            </motion.div>
-          </motion.form>
+          </motion.div>
 
           {/* Contact info */}
           <motion.div
@@ -173,7 +133,7 @@ export default function Contact() {
             whileInView="visible"
             viewport={{ once: true, margin: "-60px" }}
             variants={stagger}
-            className="order-1 flex flex-col gap-3 md:order-2"
+            className="flex flex-col gap-3"
           >
             <motion.p
               variants={fadeUp}
@@ -188,16 +148,35 @@ export default function Contact() {
                   <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-void-surface text-ink-4">
                     <Icon size={15} strokeWidth={1.75} />
                   </div>
-                  <div className="flex flex-col gap-0.5">
+                  <div className="flex min-w-0 flex-col gap-0.5">
                     <span className="font-jakarta text-[10px] text-ink-5">
                       {t(info.label)}
                     </span>
                     <span className="font-jakarta text-sm font-medium text-ink-2">
-                      {t(info.value)}
+                      {info.label === ui.email ? (
+                        // Let a long address wrap after "@" instead of overflowing the card.
+                        <>
+                          {profile.email.split("@")[0]}@<wbr />
+                          {profile.email.split("@")[1]}
+                        </>
+                      ) : (
+                        t(info.value)
+                      )}
                     </span>
                   </div>
                 </div>
               );
+
+              if (info.label === ui.email) {
+                return (
+                  <motion.div key={info.label.en} variants={fadeUp} className="flex items-stretch gap-2">
+                    <a href={info.href ?? undefined} className="min-w-0 flex-1">
+                      {content}
+                    </a>
+                    <CopyEmailButton email={profile.email} />
+                  </motion.div>
+                );
+              }
 
               return (
                 <motion.div key={info.label.en} variants={fadeUp}>
